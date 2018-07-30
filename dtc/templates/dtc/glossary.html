@@ -1,0 +1,327 @@
+
+{% extends "base.html" %}
+ 
+{% block head_title %}Glossary {% endblock %}
+  {% block head_css %}
+   <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/dt-1.10.12/fc-3.2.2/fh-3.1.2/r-2.1.0/sc-1.4.2/se-1.2.0/datatables.min.css"/>
+ 
+
+{% endblock %}
+{% block head_javascript %}
+  <script type="text/javascript" src="https://cdn.datatables.net/v/dt/dt-1.10.12/fc-3.2.2/fh-3.1.2/r-2.1.0/sc-1.4.2/se-1.2.0/datatables.min.js"></script>
+
+  <script>
+  $(document).ready(function() {
+    $('#example').DataTable( {
+        scrollY: 300,
+        scrollX: true,
+        scrollCollapse: true,
+        paging: false,
+        fixedColumns: true
+    } );
+} );
+  </script>
+{% endblock %}
+{% block content %}
+
+
+
+  
+    <div style="width:95%; height: 88%; margin:5px">
+         <table id="example" class="display" cellspacing="0" width="100%">
+             <thead>
+             <tr>
+                <th>Term</th>
+                <th>Sub term</th>
+                <th>Description</th>
+            </tr>
+           </thead>
+           <tfoot>
+            <tr>
+                <th>Term</th>
+                <th>Sub term</th>
+                <th>Description
+            </th>
+               </tr>
+        </tfoot>
+        <tbody>
+                 <tr>
+             
+                 <td><b>Assay description</b></td>
+                 <td>Assay description</td>
+                 <td>An assay description provides a short summary of the assay features.</td>
+            </tr>
+            <tr>
+              
+                 <td><b>Assay format</b></td>
+                 <td>Assay format</td>
+                 <td>A biochemical assay format is an in vitro format used to measure the activity of a biological macromolecule, e.g. a purified protein or nucleic acid. It is most often a homogeneous assay, but can be heterogeneous if a solid phase, such as beads, is used to immobilize the macromolecule.</td>
+            </tr>
+            <tr>
+               <td></td>
+
+                 <td>Biochemical</td>
+                 <td>A biochemical assay format is an in vitro format used to measure the activity of a biological macromolecule, e.g. a purified protein or nucleic acid. It is most often a homogeneous assay, but can be heterogeneous if a solid phase, such as beads, is used to immobilize the macromolecule.</td>
+            </tr>
+                  <tr>
+               <td ></td>
+                 <td>Cell-based</td>
+                 <td>A cell-based assay format involves the use of living eukaryotic cells and is a heterogeneous assay.</td>
+            </tr>
+                  <tr>
+               <td ></td>
+                 <td>   Cell-free</td>
+                 <td>   A cell-free assay format originates from cells, but does not use intact, live cells.  This format is distinct from biochemical assays. It is most often a homogeneous assay, but can be heterogeneous if a solid phase, such as beads, is used to immobilize the components.</td>
+            </tr>
+            <tr>
+               <td></td>
+
+                 <td>Organism-based</td>
+                 <td>An organism-based assay format involves the use of a living organism and is a heterogeneous assay.</td>
+            </tr>
+                        <tr>
+               <td></td>
+
+                 <td>   Physiochemical</td>
+                 <td>A physiochemical assay format involves the measurement of physical and chemical properties of perturbagens, namely aqueous solubility, octanol/water partition, or cell permeability models e.g. parallel artificial membrane permeability assay (PAMPA).</td>
+            </tr> 
+                               <tr>
+               <td></td>
+
+                 <td>Tissue</td>
+                 <td>A tissue-based assay format involves the use of a tissue derived from a living organism and is a heterogeneous assay type.</td>
+            </tr>
+            <tr>
+              
+                 <td><b>Assay type</b></td>
+                 <td>Assay type</td>
+                 <td>Assay type refers to the category of bioassay used to study a property or process, e.g. binding, functional, or phenotypic.</td>
+            </tr>
+                                         <tr>
+               <td></td>
+
+                 <td>Binding</td>
+                 <td>Binding assays examine the physical interaction between two molecules, e.g. perturbagen-protein, protein-protein, protein-DNA, etc. A binding assay measures the direct interaction between two molecules.</td>
+            </tr>
+            <tr>
+                                         <tr>
+               <td></td>
+
+                 <td>Functional</td>
+                 <td>Functional assays measure a signal produced by activation of a function, e.g. enzyme activity in a kinase assay.</td>
+            </tr>
+            <tr>
+                                         <tr>
+               <td></td>
+
+                 <td>Phenotypic</td>
+                 <td>A phenotypic assay measure a complex response such as cell survival, proliferation, localization of a protein, nuclear translocation etc. A specific molecular target is not known or assume</td>
+            </tr>
+             
+               <tr>
+
+                 <td><b>Assay subtype</b></td>
+                 <td>Binding, reversible</td>
+                 <td>In a reversible binding assay, the interaction of a ligand with a receptor is dissociated by altering the binding conditions, e.g. buffer, salt concentration, etc.</td>
+            </tr>
+                                         <tr>
+               <td></td>
+
+                 <td> Binding, irreversible</td>
+             <td>In an irreversible binding assay, the interaction of a ligand with a receptor is permanent and cannot be dissociated by changing the binding conditions</td>
+            </tr>
+            <tr>
+               <td></td>
+
+                 <td>   Binding, saturation</td>
+                 <td>A saturation binding assay measures specific radiolabelled ligand binding at equilibrium at various concentrations.</td>
+            </tr>
+            <tr> 
+               <td></td>
+
+                 <td>Enzyme activity</td>
+                 <td>An enzyme activity assay is used to measure the effect of a perturbagen on enzyme activity, measured either directly or as coupled to a secondary molecule.</td>
+            </tr>
+                        <tr> 
+               <td></td>
+
+                 <td>Process</td>
+                 <td>A process refers to a recognized chemical reaction or molecular function with a defined beginning and end. Examples include RNA splicing, proteolysis, cell death, neurite outgrowth, etc.</td>
+            </tr>
+                        <tr> 
+               <td></td>
+
+                 <td>Reporter geney</td>
+                 <td>A reporter gene assay measures gene expression from an artificial gene construct containing the coding sequence for a protein whose expression can be tracked or reported. In the DNA construct, the coding sequence of a reporter gene is inserted under the control of a promoter or regulatory element of interest. Reporter genes include luciferase, beta galactosidase, beta lactamase, chloramphenicol acetyl transferase, or a fluorescent protein.</td>
+            </tr>
+                        <tr> 
+               <td></td>
+  
+                 <td>Signaling</td>
+                 <td>A signaling assay measures one of the series of events that are downstream from a chemical signal at the cell surface, e.g. formation of cyclic AMP, transcription factor activation, cytokine secretion, etc., which results in a specific cellular activity, such as cell division, cell migration, etc.</td>
+            </tr>
+                        <tr> 
+               <td></td>
+  
+                 <td>Uptake</td>
+                 <td>An uptake assay refers to the measurement of a process where a substance is taken up by a cell, most commonly by receptor-mediated endocytosis.</td>
+            </tr>
+                        <tr> 
+               <td></td>
+
+                 <td>Viability</td>
+                 <td>A viability assay measures the cellular state of living or dying by using an indicator of life or death. Cell life indicators include ATP content, cell number, dehydrogenase activity, DNA content, esterase activity, mitochondrial membrane potential, membrane integrity, and protease activity. Cell death indicators include caspase activity, chromatin condensation, and phospholipid redistribution</td>
+            </tr>
+             
+                      <tr>
+
+                 <td><b>Detection technology</b></td>
+                 <td>Detection technology</td>
+                 <td>IA detection technology is the physical method or technique readout used to measure an effect caused by a perturbagen in an assay environment.</td>
+            </tr>
+                                         <tr>
+               <td></td>
+     
+                 <td>Fluorescence</td>
+             <td>Fluorescence detection methods use the principles of fluorescence, whereby incident light excites a fluorophore that then emits light at lower energy and higher wavelength, typically in the visible portion of the UV-Visible spectrum. </td>
+            </tr>
+            <tr>
+               <td></td>
+
+                 <td>Fluorescence polarization (FP)</td>
+                 <td>Fluorescence polarization (FP) measurements are based on the assessment of size-dependent rotational motions of species and used to measure binding interactions.</td>
+            </tr>
+            <tr> 
+    
+                 <td></td>
+                 <td>AlphaScreen</td>
+                 <td>Amplified Luminescent Proximity Homogeneous Assay Screen is a subtype of fluorescence detection technologies.</td>
+            </tr>
+                        <tr> 
+               <td></td>
+                 <td>Time Resolved Fluorescence (TRF)</td>
+                 <td>Time Resolved Fluorescence (TRF) is a subtype of fluorescence detection technologies. One commercial name is DELFIA.</td>
+            </tr>
+                        <tr> 
+               <td></td>
+
+                 <td> Time -Resolved Fluorescence Energy Transfer (TR-FRET)</td>
+                 <td>Time-Resolved Fluorescence Energy Transfer (TR-FRET) is a subtype of fluorescence detection technologies. Commercial names are LANCE and HTRF.</td>
+            </tr>
+                        <tr> 
+               <td></td>
+
+                 <td>Label-free technology</td>
+                 <td>Label-free technology  Label-free detection technologies measure binding interactions and cell-based reactions in the absence of conventional labels, e.g., fluorescent probes. Advantages include the ability to measure a) functional activity without modifying the binding partners with labels, b) binding interactions independent of functional activity, and c) cell-based assays without the need to engineer cell-lines to over-express given targets, such as GPCRs.</td>
+            </tr>
+                        <tr> 
+               <td></td>
+   
+                 <td>Luminescence</td>
+                 <td>Luminescence  Luminescence detection technologies make use of light emission that occurs from an electronically excited state reached by a physical, mechanical, or chemical mechanism.</td>
+            </tr>
+                        <tr> 
+               <td></td>
+
+                 <td>Microscopy</td>
+                 <td>   Microscopic detection technologies use microscopes to see objects that cannot be seen with an unaided eye.</td>
+            </tr>
+                               <tr> 
+               <td></td>
+
+                 <td>Quantitative PCR (qPCR)</td>
+                 <td>A viability assay measures the cellular state of living or dying by using an indicator of life or death. Cell life indicators include ATP content, cell number, dehydrogenase activity, DNA content, esterase activity, mitochondrial membrane potential, membrane integrity, and protease activity. Cell death indicators include caspase activity, chromatin condensation, and phospholipid redistribution</td>
+            </tr>
+                              <tr> 
+               <td></td>
+  
+                 <td>Radiometry</td>
+                 <td>Radiometry detection technologies use radioactive tracers.  Examples of assays that use radiometry are filter assays and Scintillation Proximity Assay (SPA).</td>
+            </tr>
+                              <tr> 
+               <td></td>
+
+                 <td>Spectrophotometry</td>
+                 <td>Spectrophotometry detection technologies measure the amount of light that a sample absorbs. A spectrophotometer operates by passing a beam of light through a sample and measuring the intensity of light reaching a detector. </td>
+            </tr>
+                              <tr> 
+               <td></td>
+ 
+                 <td>Thermal shift</td>
+                 <td>Thermal shift detection technologies detect temperature shifts using a fluorescent dye that is sensitive to a protein environment.  Upon heating, a protein unfolds and loses native conformation. Binding of a small molecule can often stabilize the protein conformation, resulting in a higher unfolding temperature. </td>
+            </tr>   
+
+                 <td> <b>Endpoint action</b></td>
+                 <td> Assay endpoint mode of action</td>
+                 <td> An assay endpoint mode of action refers to the effect of the perturbagen on the assay target, e.g. inhibition, activation, cytotoxicity, etc.</td>
+            </tr>
+                                         <tr>
+               <td></td>
+
+                 <td> Activation</td>
+             <td>Activation An activation endpoint action is the initiation, enhancement, or increase of a biological action, such as increasing the rate of an enzymatic reaction or positively regulating gene expression through an increased rate of transcription.</td>
+            </tr>
+            <tr>
+    
+                 <td></td>
+                 <td>   Cytotoxicity</td>
+                 <td>A cytotoxicity endpoint action is a toxic or cell death-inducing property of a perturbagen. Known cytotoxic agents mediate cell death commonly by inducing necrosis, apoptosis, or autophagy. Cytotoxicity can be detected by measuring various aspects of the death process, e.g. membrane permeability, ATP concentration, DNA fragmentation, etc.</td>
+            </tr>
+            <tr> 
+
+                 <td></td>
+                 <td>   Growth inhibition</td>
+                 <td>A growth inhibition endpoint action refers to growth reduction of a predefined stimulus. The unit of measure is always percent, when normalized to the dynamic range of the assay. Cell viability or proliferation can be measured in a variety of ways, e.g. 1) protein content by sulforhodamine B staining followed by absorbance measurement, 2) mitochondrial dehydrogenase activity by 3-(4,5-dimethylthiazol-2-yl)-2,5-diphenyl tetrasodium bromide, MTT staining, followed by absorbance measurement, 3) expression of proliferation-associated antigens by immunostaining for Ki-67, and 4) ATP content by using CellTiter-Glo reagent (Promega) followed by luminescence measurement.</td>
+            </tr>
+                        <tr> 
+
+                 <td></td>
+                 <td> Inhibition</td>
+                 <td> An inhibition endpoint action refers to reduction of a predefined stimulus.</td>
+            </tr>
+                        <tr> 
+
+                 <td></td>
+                 <td> Inverse agonist</td>
+                 <td> An inverse agonist endpoint action refers to a modulator that binds to the same receptor as an agonist, but induces a response opposite to that of an agonist.</td>
+            </tr>
+
+
+                <tr> 
+                 <td><b>Inhibitor type</b></td>
+                 <td>Inhibitor type</td>
+                 <td> The inhibitor type describes the mode of action of the inhibitor; e.g. many kinase inhibitors are ATP competitors.</td>
+            </tr>
+                            <tr> 
+                 <td></td>
+                 <td>Competitive inhibitor</td>
+                 <td>A competitive inhibitor binds to the active site of the enzyme and prevents substrate from binding. A competitive inhibitor can only bind to free enzyme.nist endpoint action refers to a modulator that binds to the same receptor as an agonist, but induces a response opposite to that of an agonist.</td>
+            </tr>
+                            <tr> 
+                 <td></td>
+                 <td>Noncompetitive inhibitor</td>
+                 <td> A noncompetitive inhibitor binds to the enzyme at a site distinct from the active, substrate-binding, site. A noncompetitive inhibitor can bind to free enzyme or an enzyme-substrate complex.</td>
+            </tr>
+                            <tr> 
+                 <td></td>
+                 <td>Allosteric inhibitor</td>
+                 <td>An allosteric inhibitor decreases activity or substrate affinity by binding to a site distinct from the active site, an allosteric site.  This interaction is characterized by a conformational change in the target that is required for inhibition.</td>
+            </tr>
+                                        <tr> 
+                 <td><b>Substrate type</b></td>
+                 <td></td>
+                 <td> Substrate is needed in order for the enzyme to be able to produce a product, most likely measurable when  considering bioassays.Some common substrates are: ATP for kinases, methyl group donors for methylases, acetyl group donors for acetylases, GTP for GTPases, NADH or NADPH for dehydrogenases, or numerous other metabolites, small molecules, peptides, proteins, etc.</td>
+            </tr>
+                                        <tr> 
+                 <td><b>Assay cell line</b></td>
+                 <td></td>
+                 <td>The cell line used for the assay (cell line IDs or cell line ontology).</td>
+            </tr>
+           </tbody>   
+         </table>
+   
+         </div>
+   
+
+
+{% endblock %}

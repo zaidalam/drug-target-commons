@@ -1,0 +1,299 @@
+{% load staticfiles %}
+{% load crispy_forms_tags %}
+
+
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head id="Head1">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <!-- Latest compiled and minified CSS -->
+  <title>{% block head_title %}{% endblock %}</title>
+  <!-- Optional theme -->
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+ <!--  <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}"> -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <link rel="stylesheet" href="{% static 'css/font-awesome.min.css' %}">
+  <!-- <link rel="stylesheet" href="{% static 'css/bootstrap-theme.min.css' %}"> -->
+  <link href='{% static "css/bootstrap-tour.min.css" %}' rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'css/main.css' %}">
+  <link href="{% static 'css/alertify.css' %}" rel="stylesheet" />
+
+  {% block head_css %}{% endblock %}
+  <script src="{% static 'js/vendor/jquery-1.11.1.min.js' %} "></script>
+  <!--  // <script src="{% static 'js/vendor/bootstrap.min.js' %}"></script> -->
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src='{% static "js/bootstrap-tour.min.js" %}'></script>
+  <script src="{% static 'js/main.js' %}"></script>
+  <script type="text/javascript" src="{% static 'js/alertify.js' %}"></script>
+  <script type="text/javascript" src="{% static 'js/validator.js' %}"></script>
+  <script type="text/javascript" src="{% static 'js/master.js' %}"></script>
+  <script>
+    var user = '';
+    var email = '';
+    var request_path = '?next={{ request.path|escape }}'
+    {% if user.is_authenticated %}
+      user = '{{user.username}}'
+      email = '{{user.email}}'
+    {% endif %}
+
+
+    $(function () {
+      var tour = new Tour({
+        onStart: function (tour) {
+            $('#tour').addClass('disabled'); // Disables visually
+            $('#tour').prop('disabled', true);
+        }, // Disables visually + functionally
+        onEnd: function (tour) {
+            $('#tour').removeClass('disabled'); // Disables visually
+            $('#tour').prop('disabled', false);  // Disables visually + functionally
+            // tour.restart();
+        }
+      });
+
+      tour.addSteps([{
+          orphan: true,
+          element: "#tour",
+          title: "Welcome!",
+          backdrop:true,
+          placement: "left",
+          content: "Welcome to Drug target commons exploration tour. It will indroduce you to our application by walking through it step by step.",
+          },
+          {
+          backdrop:true,  
+          element: "#userguide",
+          title: "User guide",
+          content: "Please read the <a href='/userguide'>user guide</a> to get a detailed explanation of DTC's functionalities",
+          },
+          {
+          path:'/',
+           backdrop:true,
+          element: "#search_info",
+          title: "How to search",
+          placement: "left",
+          content: "click hear to get more information on how to search",
+          },
+          {
+          path:'/',
+          backdrop:true,
+          element: "#txtSearchClient",
+          placement: "bottom",
+          title: "Search",
+          content: "We will now search all compounds,targets and mutation with key word 'gefitinib' ",
+          },
+          {
+          path:'/search?txtSearchClient=gefitinib',
+           backdrop:true,
+          element: "#jqxgrid",
+          title: "Seach Match",
+          placement: "top",
+          content:"Please wait before all possible matches are listed, to view the desired bioacitivity by clicking on the 'Bioactivities' link on the right side ",
+          },
+          {
+          path:'/bioactivities?id=DTCC01738571&category=Compound&name=GEFITINIB',
+          backdrop:true,
+          element: "#jqxgrid",
+          title: "Bioactivities",
+          placement: "top",
+          content:"Bioactivities listed as follows, everyone can download them.To update bioactivities you would need to <a href='/accounts/login/'>login</a>,for more information please read the <a href='/userguide'>user guide</a>. Thankyou!", 
+          }
+
+      ]);
+      tour.init();
+      $('#tour').click(function (){
+        //Start the tour
+          tour.start();
+          tour.restart();
+       });
+
+    });
+
+  </script> 
+  <script type="text/javascript">
+    window._urq = window._urq || [];
+    _urq.push(['initSite', '5403755a-6362-4043-808e-e781584fff15']);
+    (function() {
+    var ur = document.createElement('script'); ur.type = 'text/javascript'; ur.async = true;
+    ur.src = ('https:' == document.location.protocol ? 'https://cdn.userreport.com/userreport.js' : 'http://cdn.userreport.com/userreport.js');
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ur, s);
+    })();
+  </script>
+    {% block head_javascript %}{% endblock %}
+</head>
+<body class='default'>
+    <header>
+      
+        <nav class="navbar navbar-default">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                  <a href="/"><img height="80" src="{% static 'img/DrugTargetCommons PNG.png' %}" alt="" /></a>
+                </div>
+              
+           <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+                <div id="navbar" class="collapse navbar-collapse nopadding">
+                    <ul class="nav navbar-nav" id="nav_list">
+                        <li class="{% if nbar == 'home' %}active{% endif %}">
+                            <a id="Home"  href="/"  ><span class="glyphicon glyphicon-home" ></span></a>
+                        </li>
+                        <li class="{% if nbar == 'bulk' %}active{% endif %}">
+                          <a id="bulkimport" href="/bulk_import"  ><span class="glyphicon glyphicon-upload"></span>&nbsp;Bulk import
+                          </a>
+                        </li>
+                         {% if user.is_authenticated %}
+                        <li class="{% if nbar == 'submissions' %}active{% endif %}">
+                          <a id="suggestions" href="/submissions"  ><span class="glyphicon glyphicon-retweet"></span>&nbsp;My Submissions</a>
+                        </li>
+                        {% endif %}
+
+       
+                        <li>
+                            <a id="tour" href="#" ><span class="glyphicon glyphicon-play"></span>&nbsp;Take a Tour</a>
+                        </li>
+                        <li class="dropdown">
+                         
+                          <a class="dropdown-toggle" data-toggle="dropdown" href="#">Download
+                          <span class="caret"></span></a>
+                          <ul class="dropdown-menu">
+                            <li>
+                              <a href="{% static 'Excell_files/DTC_data.csv' %}" class='dropdown-item' download="DtcDrugTargetInteractions.csv">Bioactivity data(csv)</a>
+                            </li>
+                            <li><a class="dropdown-item" href="{% static 'Excell_files/DTC_dump.tgz' %}" download="DTC_dump.tgz" >Sql dump</a></li>
+                             <li><a class="dropdown-item" href="{% static 'img/DTC_ER_diagram.png' %}" download="DTC_ER_diagram.png">ER Diagram</a></li>
+                            <li>
+                              <a href="{% static 'Excell_files/Api_documentation.pdf' %}" class='dropdown-item' download="Api_documentation.pdf">
+                                   Api documentation</a>
+                            </li>
+                           
+                          </ul>
+                        </li>
+
+                        <li class="{% if nbar == 'reference' %}active{% endif %}">
+                            <a id="reference" href="/reference"><span class="glyphicon glyphicon-sign"></span>&nbsp;Reference</a>
+                        </li>
+                                       <li class="dropdown">
+                         
+                          <a class="dropdown-toggle" data-toggle="dropdown" href="#"><span class="glyphicon glyphicon-sign"></span>&nbsp;Help
+                          <span class="caret"></span></a>
+                          <ul class="dropdown-menu">
+                            <li>
+                              <a href="/userguide" class='dropdown-item'>Userguide</a>
+                            </li>
+                            <li><a class="dropdown-item" href="/glossary"  >Glossary</a></li>
+                             <li><a class="dropdown-item" href="/annotation_guidlines"> Annotation guidelines</a></li>
+                            <li>
+                            </li>
+                           
+                          </ul>
+                        </li>
+                    </ul>
+                    <ul class="nav navbar-nav navbar-right ">
+
+                        <li id="username">
+                          {% if user.is_authenticated %}
+                         
+                            <a href="/accounts/logout"  style="text-decoration:none;">
+                              <span class="glyphicon glyphicon-user">  {{user.username}}</span>
+                            </a>
+                          {% else %}
+                            <a href="{% url 'account_login' %}?next={{request.get_full_path|urlencode}}"><span class="glyphicon">&nbsp;Login</span></a>
+                             <!-- <a href="#" data-toggle="modal" data-target="#login-modal"><span class="glyphicon">&nbsp;Login</span></a> -->
+                          {% endif %}  
+                        </li>
+                    </ul>
+
+                </div>
+            </div>
+        </nav>
+
+
+    </header>
+    <div class="modal fade" id="login-modal" tabindex="-1" role="dialog" aria-labelledby="login-modal" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+
+        <div  class="loginmodal-container">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal">&times;</button>
+              <h4 class="modal-title">Login</h4>
+            </div>
+<!--        <div class="error">
+            <strong>error!</strong> Invalid username/password
+            </div> -->
+          <div class="modal-body">
+                    <form  id="login_form" method="post" action="#" role="form">
+                        {% csrf_token %}
+                        {{ form|crispy }}
+                        {% if redirect_field_value %}
+                         <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+                        {% endif %}
+                       <div class="form-group">
+                       <button id="myFormSubmit" type='submit' class="btn btn-primary">log in</button> or
+                       <!-- <button type="button" class="btn btn-default" data-dismiss="modal">Close</button> -->
+                       <a class="btn btn-google" id="google_login" href="/accounts/google/login">
+                          <span class="fa fa-google"></span> Sign in with Google
+                       </a>
+                      </div>
+                  </form>
+          </div>
+                <div class="modal-footer">
+                    <div class="login-help">
+                    <span>Don't have an account! <a href="/accounts/signup"> Sign Up Here </a> </span>
+                   
+                    </div>
+                   
+                </div>
+        
+        </div>
+    </div>
+</div>
+<!-- <div class="modal fade" id="userinfomodel" tabindex="-1" role="dialog" aria-labelledby="feedback-form" aria-hidden="true" >
+    <div class="modal-dialog modal-lg">
+      <div  class="loginmodal-container">
+            <h1>User Information</h1>
+        <form id="userinfo_form"   role="form">
+        <div class="form-group has-feedback">
+          <input id="curator_name" class ="form-control" name="curator_name"   placeholder="Name" type="text" required />
+                  <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
+        </div>
+        <div class="form-group has-feedback">
+          <input id="curator_email" class="form-control" title="Email"pattern="^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" name="curator_email"  placeholder="Your e-mail" type="email" required />
+          <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
+        </div>
+        <div class="form-group">
+          <button id="Button2" type='submit' class="btn btn-primary">Send</button>
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button> 
+        </div>
+      </form>
+    </div>
+</div>
+
+    </div> -->
+    <div id="main" style="min-height: 76%">
+        <div class="container-fluid">
+            {% block content %}{% endblock %}
+        </div>
+    </div>
+
+    <div class="footer text-center">
+        <img ID="ImageFooter" height="15%" width="50%"  src="{% static 'img/FIMM_footer.png' %}" />
+    </div>
+<script>
+
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-84945939-1', 'auto');
+  ga('send', 'pageview');
+
+</script>
+</body>
+</html>
+
+
+
+

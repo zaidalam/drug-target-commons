@@ -1,0 +1,62 @@
+
+{% extends "base.html" %}
+ 
+{% block head_title %}Annotation guidelines {% endblock %}
+  {% block head_css %}
+
+ 
+
+{% endblock %}
+{% block head_javascript %}
+
+
+
+
+{% endblock %}
+{% block content %}
+
+   <p style='text-align: center;'><strong>ANNOTATION GUIDELINES</strong></p>
+
+<ol type="1">
+<li><strong>Deposition of data via bulk upload</strong></li>
+
+<p>New data can only be deposited into DTC via bulk upload feature (<a href="http://drugtargetcommons.fimm.fi/bulk_import/">http://drugtargetcommons.fimm.fi/bulk_import/</a>). However, modifications in the existing data does not necessarily require bulk upload.</p>
+<p>Users must have to follow the provided DTC template in order to successfully upload the data. We encourage curators to first download template file and copy their data into same downloaded template file.</p>
+<p>While depositing new data into DTC, we advise curators to atleast include information for the following columns:</p>
+<ul>
+<li>Standard InChiKey</li>
+<li>Compound ID or name (or both)</li>
+<li>Uniprot ID for targets</li>
+<li>Target name</li>
+<li>PubMed ID</li>
+<li>End Point Standard Type</li>
+<li>End Point Standard Relation</li>
+<li>End Point Standard Value</li>
+<li>End Point Standard Units</li>
+</ul>
+<p>We will be highly grateful if curators can also provide mutation information (if any), and &micro;BAO assay information (e.g. Assay type and sub type, Assay format, Inhibitor type, End point mode of action, Detection technology).</p>
+<p>We encourage curators to deposit data in terms of dose response measurements (i.e. IC50, EC50, AC50, XC50, Kd, Ki etc). However, curators may also submit data for fixed concentrations (Activity %, Inhibition %). In that case, compound concentration range (or single concentration value) should be provided under column: &lsquo;<strong>Compound concentration value&rsquo;.</strong></p>
+<p>After the deposition of data, curators can view their submitted data at:&nbsp; <a href="http://drugtargetcommons.fimm.fi/submissions/">http://drugtargetcommons.fimm.fi/submissions/</a>.&nbsp; Curators still can modify entered data if they wish so. Reviewers will see the most updated form of data. Curators may also view if the reviewers have made any modifications in their entered data.</p>
+<p>We advise the users to strictly follow the DTC template while uploading data. Users may skip uninteresting columns and keep only mandatory columns. However, column names for uploaded data must match with names provided in the template.</p>
+<p>&nbsp;</p>
+
+<li><strong>Modifications in the existing data:</strong></li>
+
+<p>Users can modify existing data and add &micro;BAO information by carefully reading the source publications. Description about &micro;BAO and other DTC terms are provided in the &lsquo;<strong>Glossary&rsquo; </strong>tab. While extracting &micro;BAO information from source publications, annotators can also look whether if bioactivity data is for mutant targets. This information can be very valuable for DTC. Mutant target information can be entered using following format:</p>
+<p>Gene name(single or multi point mutation in the amino acid sequence),</p>
+<p>Examples: <strong>BRAF(V600E)</strong>, <strong>EGFR(L858R,T790M)</strong></p>
+<p>We advise the annotators to perform annotation process by publication wise. This means that they choose a publication of their interest, and then extract DTC required data for all the compounds/targets present in that publication. It can be easier for the annotators as well as for DTC reviewers.</p>
+<p>Users can annotate data in online&nbsp; or offline mode. In offline mode, he/she can export the data from DTC into excel, modify it, add new information (e.g. &micro;BAO) and upload it back to DTC.</p>
+
+<li><strong>Curate new compounds/targets</strong></li>
+
+<p>If user wish to curate data for compounds or targets, which are currently missing in DTC, he/she can either search that compound/target on PubMed or extract data from publically available bioactivity databases e.g. BindingDB, PubChem, Drug Central and ChEMBL. For specific compounds, users may also consult commercial tools such as Selleck. In addition, newly generated data through experimentation can also be uploaded into DTC. While depositing newly curated data, users should provide information for at least 9 mandatory columns as described in section 1.</p>
+
+
+
+<li><strong>Questions</strong></li>
+
+<p>If curator/annotator wish to ask questions from DTC administrators, he can do it by clicking &lsquo;<strong>Feedback&rsquo;</strong> icon and typing the question. If curator has provided email, a notification will be sent to his email as soon as the question is addressed by the administrators. All the questions/answers are publically available for the future guidance of new users.</p>
+</ol>
+
+{% endblock %}

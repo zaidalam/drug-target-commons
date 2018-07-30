@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+ {% load staticfiles %}
+{% block head_title %}Bulk Import{% endblock %}
+{% block head_css %}
+    <link href="{% static 'css/jqx.base.css' %}" rel="stylesheet" type="text/css" />
+    <link href="{% static 'css/jqx.bootstrap.css' %}" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css"/>
+    <link href="{% static 'css/bulkimport.css' %}" rel="stylesheet" />
+{% endblock %}
+
+{% block head_javascript %}
+    <script type="text/javascript" src="{% static 'js/vendor/Jqxwidgets/jqxcore.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/vendor/Jqxwidgets/jqxdata.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/vendor/Jqxwidgets/jqxbuttons.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/vendor/Jqxwidgets/jqxscrollbar.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/vendor/Jqxwidgets/jqxlistbox.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/vendor/Jqxwidgets/jqxdropdownlist.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/vendor/Jqxwidgets/jqxmenu.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/vendor/Jqxwidgets/jqxgrid.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/vendor/Jqxwidgets/jqxgrid.pager.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/vendor/Jqxwidgets/jqxgrid.sort.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/vendor/Jqxwidgets/jqxgrid.filter.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/vendor/Jqxwidgets/jqxcheckbox.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/vendor/Jqxwidgets/jqxgrid.columnsresize.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/vendor/Jqxwidgets/jqxgrid.selection.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/vendor/Jqxwidgets/jqxpanel.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/vendor/Jqxwidgets/jqxgrid.edit.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/vendor/Jqxwidgets/jqxnumberinput.js' %}"></script>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div id="drop" class="fileinput fileinput-new" data-provides="fileinput">
+    <span class="btn btn-default btn-file"><span ></span><input type="file" name="xlfile" id="xlf" /></span>
+    <span class="fileinput-filename"></span><span class="fileinput-new"> or Drop an XLSX file here to see sheet data</span>
+</div>
+  <div id='jqxWidget' style="font-size:13px;font-family: Verdana; float: left;width:100%;">
+    <div><input id = "inputsearch"  class="form-control" type="text" placeholder="Search within imported data" style="margin-bottom:5px;display:none"/></div>
+    <div id="jqxgrid" ></div>
+    <div id="eventslog"  style="width:100%;margin-top:10px">
+      <div id="grid-buttons"  style="width: 400px; float: left; margin-right:10px;display:none;">
+        <input class="btn btn-default " value="Remove Filters" id="clearfilteringbutton" type="button" />
+        <button id='send_review' class="btn btn-default has-spinner">
+        <span class="spinner"><i class="fa fa-refresh fa-spin fa fa-fw"></i></span>
+        Send for Review
+        </button>
+      </div>  
+            <div style="float:right"> 
+                <a href="{% static 'Excell_files/Sample_file_for_Bulk_upload.xlsx' %}" download="Excell_files/Sample_file_for_Bulk_upload.xlsx"> <i class="fa fa-file-excel-o fa-2x" aria-hidden="true">Download Template</i></a>
+       </div>   
+    </div>
+</div>
+</div>
+    <script type="text/javascript" src="{% static 'js/jszip.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/xlsx.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/lodash.js' %}"></script>
+    <script src="{% static 'js/bulkimport.js' %}"></script>
+{% endblock %}

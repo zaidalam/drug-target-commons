@@ -1,0 +1,7 @@
+db.sqlite3
+*.pyc
+__pycache__
+dtc.sublime-workspace
+dtc.sublime-project
+dtc/static/Excell_files/DTC_data.csv
+.DS_Store

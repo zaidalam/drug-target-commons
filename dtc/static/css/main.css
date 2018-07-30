@@ -1,0 +1,352 @@
+
+
+/* ==========================================================================
+   Author's custom styles
+   ========================================================================== */
+       
+        .nopadding {
+            padding: 0 !important;
+            margin: 0 !important;
+        }
+        .glyphicon-large {
+            text-decoration:none;
+            min-height: 15px;
+            line-height: 32px;
+            color:#000;
+            width: 1em;
+            display: inline;
+            margin: -0.5em 0 0px;
+
+        }
+        
+    div {
+            display: block;
+        }
+    div.figures div.panel 
+        {
+          margin:0vw 1vw 2.5vw 0vw;
+        }
+        .tab-content{
+          margin-top:5px
+        }
+
+       #TargetClass{
+            /*width: 100%;*/
+            height: 220px;
+            font-size: 11px;          
+        }     
+       
+        #Activity_types{
+            /*width: 100%;*/
+            height: 220px;
+            font-size: 11px;          
+        }   
+
+        .amcharts-pie-slice {
+            transform: scale(1);
+            transform-origin: 50% 50%;
+            transition-duration: 0.3s;
+            transition: all .3s ease-out;
+            -webkit-transition: all .3s ease-out;
+            -moz-transition: all .3s ease-out;
+            -o-transition: all .3s ease-out;
+            cursor: pointer;
+            box-shadow: 0 0 30px 0 #000;
+        }
+
+            .amcharts-pie-slice:hover {
+                transform: scale(1.1);
+                filter: url(#shadow);
+            }
+
+        .local_label-danger {
+            color: red;
+        }
+
+        .local_container_left {
+            margin-left: 5px;
+            padding-left: 0px;
+        }
+
+        .fluid_margin 
+        {
+            margin-top:0px;
+        }
+
+        .local_align_centre {
+            text-align: center;
+        }
+
+        .local_vAlign_centre 
+        {
+            vertical-align:middle;
+        }
+
+        .Div_Form {
+            width: 100%;
+            height: 100%;
+            z-index: 101;
+            vertical-align: middle;
+            text-align: left;
+            /*margin-left: 5px;*/
+            overflow-y: auto;
+        }
+
+        .lbl_RBL {
+            width: 15%;
+            border-bottom: 0px;
+        }
+
+        html, body {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            width: 100%;
+            font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+            font-size: 14px;
+            line-height: 1.42857143;
+           -webkit-text-size-adjust: 100%;
+            -ms-text-size-adjust: 100%;
+
+            /*color: #0A9AC1;*/
+            /*background-color: #fff;*/
+            /*-webkit-tap-highlight-color: rgba(0,0,0,0);*/
+        }
+
+        /*.Div_Logout {
+            float: right;
+            margin-right: 10px;
+        }*/
+
+
+      Pseudo ::before element
+    :after, :before {
+        -webkit-box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        box-sizing: border-box;
+    }
+    Pseudo ::after element
+    :after, :before {
+        -webkit-box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        box-sizing: border-box;
+    }
+
+
+        .radGridClass .rgDataDiv {
+            height: auto !important;
+        }
+
+        .Hyperlink_radGrid a {
+            color: blue!important;
+            text-decoration: underline; /* or "underline" */
+        }
+
+        .float-left {
+            float: left;
+        }
+
+        
+
+        .loginmodal-container {
+            padding: 30px;
+            max-width: 350px;
+            width: 100% !important;
+            background-color: #F7F7F7;
+            margin: 0 auto;
+            border-radius: 2px;
+            box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+            font-family: roboto;
+        }
+
+            .loginmodal-container h1 {
+                text-align: center;
+                font-size: 1.8em;
+                font-family: roboto;
+            }
+
+            .loginmodal-container input[type=submit] {
+                width: 100%;
+                display: block;
+                margin-bottom: 10px;
+                position: relative;
+            }
+
+            .loginmodal-container input[type=text], input[type=password] ,input[type=email] {
+                height: 44px;
+                font-size: 16px;
+                width: 100%;
+                margin-bottom: 10px;
+                -webkit-appearance: none;
+                background: #fff;
+                padding: 0 8px;
+                box-sizing: border-box;
+                -moz-box-sizing: border-box;
+            }
+
+                .loginmodal-container input[type=text]:hover, input[type=password]:hover,input[type=email]:hover {
+                    border: 1px solid #b9b9b9;
+                    border-top: 1px solid #a0a0a0;
+                    -moz-box-shadow: inset 0 1px 2px rgba(0,0,0,0.1);
+                    -webkit-box-shadow: inset 0 1px 2px rgba(0,0,0,0.1);
+                    box-shadow: inset 0 1px 2px rgba(0,0,0,0.1);
+                }
+
+        .loginmodal {
+            text-align: center;
+            font-size: 14px;
+            font-family: 'Arial', sans-serif;
+            font-weight: 700;
+            height: 36px;
+            padding: 0 8px;
+            /* border-radius: 3px; */
+            /* -webkit-user-select: none;
+  user-select: none; */
+        }
+
+/*        .loginmodal-submit {
+            /* border: 1px solid #3079ed; */
+ /*           border: 0px;
+            color: #fff;
+            text-shadow: 0 1px rgba(0,0,0,0.1);
+            background-color: #4d90fe;
+            padding: 17px 0px;
+            font-family: roboto;
+            font-size: 14px;*/
+            /* background-image: -webkit-gradient(linear, 0 0, 0 100%,   from(#4d90fe), to(#4787ed)); */
+        }*/
+
+/*            .loginmodal-submit:hover {
+                /* border: 1px solid #2f5bb7; */
+    /*            border: 0px;
+                text-shadow: 0 1px rgba(0,0,0,0.3);
+                background-color: #357ae8;*/
+                /* background-image: -webkit-gradient(linear, 0 0, 0 100%,   from(#4d90fe), to(#357ae8)); */
+            }*/
+
+/*        .loginmodal-container a {
+            text-decoration: none;
+            color: #666;
+            font-weight: 400;
+            text-align: center;
+            display: inline-block;
+            opacity: 0.6;
+            transition: opacity ease 0.5s;
+        }*/
+
+        .login-help {
+            font-size: 12px;
+        }
+        .jqx-grid-column-header
+        {
+        font-weight: bold !important;
+        }
+
+        /*nav bar css*/
+.navbar-nav li a {
+    padding:0 15px;
+    line-height:80px;    
+}
+.navbar-header a {
+    padding:0 15px;
+    line-height:80px;    
+}
+
+ .navbar-default .navbar-nav > .active{
+    color: #000;
+   background: none;
+ }
+ .navbar-default .navbar-nav > .active > a, 
+ .navbar-default .navbar-nav > .active > a:hover, 
+ .navbar-default .navbar-nav > .active > a:focus {
+      color: #000;
+      background: none;
+ }
+        .modal-footer {
+    padding: 15px;
+    text-align: left;
+    border-top: 1px solid #e5e5e5;
+}
+
+
+
+
+
+
+#txtSearchClient {
+z-index:500;        
+}
+        .active {
+            color: #000 !important;
+
+        }
+        .editedRow {
+                color: #b90f0f !important;
+                font-style: italic;
+            }
+        .editedCell
+            {
+                background-color: #d6e9c6 !important;
+               
+                font-style: italic;
+            }
+        .error {
+            color: #a94442;
+            text-align:center;
+            display:none;
+        }       
+
+/*.btn-social {
+    position: relative;
+    padding-left: 44px;
+    text-align: left;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}*/
+a.btn-google {
+    color: #fff;
+    background-color: #dd4b39;
+    border-color: rgba(0,0,0,0.2);
+}
+a.btn-google:hover {
+    color: #fff;
+    background-color: #dd4b39;
+    border-color: rgba(0,0,0,0.2);
+}
+
+
+
+
+
+
+    .spinner {
+            display: inline-block;
+            opacity: 0;
+            width: 0;
+            -webkit-transition: opacity 0.25s, width 0.25s;
+            -moz-transition: opacity 0.25s, width 0.25s;
+            -o-transition: opacity 0.25s, width 0.25s;
+            transition: opacity 0.25s, width 0.25s;
+        }
+
+        .has-spinner.active {
+            cursor: progress;
+        }
+
+            .has-spinner.active .spinner {
+                opacity: 1;
+                width: auto; /* This doesn't work, just fix for unkown width elements */
+            }
+
+        .has-spinner.btn.active .spinner {
+            width: 16px;
+        }
+
+
+
+
+
+
+

@@ -1,0 +1,178 @@
+
+{% extends "base.html" %}
+{% load staticfiles %}
+{% block head_title %}Bioactivities{% endblock %}
+ 
+{% block head_css %}
+
+ <link href="{% static 'css/jqx.base.css' %}" rel="stylesheet" type="text/css" />
+<link href="{% static 'css/jqx.bootstrap.css' %}" rel="stylesheet" type="text/css" />
+<link href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.1/themes/base/jquery-ui.css" rel="stylesheet" type="text/css" />
+<link href='{% static "css/toastr.min.css" %}' rel="stylesheet">
+
+<style>
+ 
+.color-box {
+    width: 10px;
+    height: 10px;
+    display: inline-block;
+}  
+        .nopadding {
+            padding: 0 !important;
+            margin: 0 !important;
+        }
+
+        .glyphicon-large {
+            min-height: 40px;
+            line-height: 40px;
+            width: 1em;
+            display: block;
+            margin: -0.5em 0 0px;
+        }
+    
+        dl
+        {
+         
+         background: #fff;
+         border: 1px solid #000;
+         padding: 5px 15px;
+        }
+
+      dt, dd
+      {
+         display: inline;
+      }
+
+        .breadcrumb {
+            padding: 8px 0px;
+            margin-bottom: 0px;
+            list-style: none;
+            background-color: inherit;
+            border-radius: 4px;
+        }
+        .panel-heading {
+            padding: 0px;
+            font-size: 18px;
+        }
+    </style>
+
+{% endblock %}
+
+
+
+{% block head_javascript %}
+
+
+
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.1/jquery-ui.min.js"></script>
+
+    <script src="{% static 'js/vendor/Jqxwidgets/jqxcore.js' %}" type="text/javascript"></script>
+    <script src="{% static 'js/vendor/Jqxwidgets/jqxbuttons.js' %}" type="text/javascript"></script>
+    <script src="{% static 'js/vendor/Jqxwidgets/jqxdata.js' %}" type="text/javascript"></script>
+    <script src="{% static 'js/vendor/Jqxwidgets/jqxgrid.js' %}" type="text/javascript"></script>
+    <script src="{% static 'js/vendor/Jqxwidgets/jqxgrid.selection.js' %}" type="text/javascript"></script>
+    <script src="{% static 'js/vendor/Jqxwidgets/jqxmenu.js' %}" type="text/javascript"></script>
+    <script src="{% static 'js/vendor/Jqxwidgets/jqxscrollbar.js' %}" type="text/javascript"></script>
+
+
+    <script type="text/javascript" src="{% static 'js/vendor/Jqxwidgets/jqxscrollbar.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/vendor/Jqxwidgets/jqxlistbox.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/vendor/Jqxwidgets/jqxdropdownlist.js' %}"></script>
+
+
+    <script type="text/javascript" src="{% static 'js/vendor/Jqxwidgets/jqxgrid.pager.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/vendor/Jqxwidgets/jqxgrid.sort.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/vendor/Jqxwidgets/jqxgrid.filter.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/vendor/Jqxwidgets/jqxcheckbox.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/vendor/Jqxwidgets/jqxgrid.edit.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/vendor/Jqxwidgets/jqxgrid.columnsresize.js' %}"></script>
+
+    <script type="text/javascript" src="{% static 'js/vendor/Jqxwidgets/jqxpanel.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/vendor/Jqxwidgets/jqxtooltip.js' %}"></script>
+ 
+    <script type="text/javascript" src="{% static 'js/vendor/bioactivities.js' %}"></script>
+    <script src='{% static "js/toastr.min.js" %}'></script>
+
+
+
+
+{% endblock %}
+
+{% block content %}
+
+    <div class="container-fluid">
+
+        <div class="container-fluid">
+           <div class="row " style="margin-bottom:10px">
+                <div class="search col-xs-10 col-sm-10 col-md-10 col-lg-10  nopadding">
+                <form type="get" action="{% url 'search' %}" style="margin: 0">
+                        <div class="input-group">
+                            <input type="text" id="txtSearchClient" name="txtSearchClient" class="autosuggest form-control ui-autocomplete-input"  placeholder="Search bioactivities using compound, target or publication:" autocomplete="off" role="textbox" aria-autocomplete="list" aria-haspopup="true">
+                             <span class="input-group-btn">
+                            <button  title="Click here search" class="btn btn-default" type="submit"><span class="glyphicon glyphicon-search"></span>
+                            </button>
+                          </span>
+                        </div>
+                </form>
+    {% if search %}            
+    <ul class="breadcrumb">
+        <li>
+        <a href="/">Home</a>
+        <span class="divider"></span>
+        </li>
+        <li>
+            <a href="{{ url }}">{{search}}</a>
+            <span class="divider"></span>
+        </li>
+        <li>
+            {{name}}({{request.GET.category}})
+        </li>
+    </ul>
+    {% endif%}
+                </div>
+     
+  
+                <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 nopadding text-right">
+    <div class="button-group"> 
+
+            <button title="Show/hide columns" type="button" class="btn btn-default btn-md dropdown-toggle" data-toggle="dropdown">
+                <span class="glyphicon glyphicon-cog"></span> Show/hide columns<span class="caret"></span>
+            </button>
+            <ul id='hideShow' class="dropdown-menu">
+            </ul>
+    </div>    
+    </div>
+</div>
+</div>
+<!-- <dl>
+    <dt><span class="glyphicon glyphicon-remove"></span></dt>
+    <dd> Approved </dd>
+
+    <dt> - <span class="glyphicon glyphicon-ok"></span></dt>
+    <dd> Un-approved </dd>
+
+    <dt> - <span class="color-box" style="background-color: #d6e9c6;"></span></dt>
+    <dd>Edited </dd>
+
+
+</dl>  --> 
+ <div class="row">
+  <div class="col-md-12"><span class='panel-heading'>Bioactivities for <b>{{name}}</span></div>
+</div>
+    <div id="jqxgrid"  style="height:50%"></div>
+    <div id="eventslog" style="width:100%;margin-top:10px;">
+    <div style="width: 400px; float: left; margin-right: 10px;">
+        <input type="button" class="btn btn-default" value="Export to Excel" id='excelExport' />
+        <input class="btn btn-default " value="Remove Filters" id="clearfilteringbutton" type="button" />
+         {% if user.is_authenticated %}
+        <button id="send"  class="btn btn-default has-spinner">
+            <span class="spinner"><i class="fa fa-refresh fa-spin fa fa-fw"></i></span>
+            Send for Review
+        </button>
+         {% endif %}  
+    </div>
+            
+        </div>
+    </div>
+
+{% endblock %}

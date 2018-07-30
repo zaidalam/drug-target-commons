@@ -1,0 +1,561 @@
+
+
+{% extends "base.html" %}
+ {% load staticfiles %}
+{% block head_title %}Home{% endblock %}
+{% block head_css %}
+  <link href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.1/themes/base/jquery-ui.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="{% static 'css/d3-tip-min.css' %}" />
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/t/dt/dt-1.10.11/datatables.min.css"/>
+        <style>
+
+
+
+
+
+
+li.borderless { border-top: 0 none; }
+
+/* iPads (portrait) ----------- */
+@media only screen
+and (min-device-width : 320px)
+and (max-device-width : 1150px)
+and (orientation : portrait) {
+#col_WildMUT, .badge-details {
+    font-size: 10px;
+    }
+}
+
+/* Desktops and laptops ----------- */
+@media only screen
+and (min-width : 320px)
+and (max-width : 1300px) {
+#col_WildMUT, .badge-details {
+    font-size: 10px;
+    }
+}
+/* Desktops and laptops ----------- */
+@media only screen
+and (min-width : 1300px) 
+{
+#col_WildMUT, .badge-details {
+    font-size: 12px;
+    }
+}
+
+
+/
+
+
+.caption {
+font-weight:bold;
+}   
+.list-group-item {
+    border: none
+}        
+ 
+        
+    </style>
+{% endblock %}
+
+{% block head_javascript %}
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.1/jquery-ui.min.js"></script>
+  <script type="text/javascript" src="https://cdn.datatables.net/t/dt/dt-1.10.11/datatables.min.js"></script>
+
+   
+
+    <script type="text/javascript" src="{% static 'js/vendor/amcharts/amcharts.js' %}"></script>
+
+    <script type="text/javascript" src="{% static 'js/vendor/amcharts/serial.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/vendor/amcharts/plugins/responsive/responsive.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/vendor/amcharts/pie.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/vendor/amcharts/themes/light.js' %}"></script>
+    <script src="{% static 'js/d3.min.js' %}" charset="utf-8"></script>
+    <script src="{% static 'js/d3.tip.v0.6.3-min.js' %}"></script>
+    <script src="{% static 'js/d3.layout.cloud-min.js' %}"></script>
+    <script src="{% static 'js/DTC-min-02.js' %}"></script>
+    <script src="{% static 'js/genecloud.js' %}"></script>
+        <script type="text/javascript">
+
+
+        $(document).ready(function () {
+
+            
+
+            SearchText();
+ 
+            d3.csv("{% static 'Excell_files/cloud_graph.csv' %} ", function (data) {
+
+
+                var compound = data;
+                // data table code
+                $('#data_table').DataTable({
+                    order:[[ 3, "desc" ]],
+                    data: compound,
+                    columns: [
+                              { data: 'chembl_id', title: 'Compound Id' },
+                              { data: 'standard_inchi_key', title: 'Standard Inchi Key' },
+                              { data: 'dtc_molregno', title: 'DTC Id' },
+                              { data: 'compound_name', title: 'Compound Name' },
+                              { data: 'bioactivities', title: 'Bioactivities' },
+                              { data: null, title: 'View bioactivites' }
+
+                    ],
+
+                    columnDefs: [{
+                        "targets": 0,
+                        "data": "compound_id",
+
+                        "render": function (data, type, full, meta) {
+                            
+                            return '<a href="https://www.ebi.ac.uk/chembl/compound/inspect/' + data + '">' + data + '</a>';
+                        }
+                    },
+                    {
+                        "targets": 2,
+                        "data": "dtc_molregno",
+                        "visible": false
+                    },
+                    {
+                        "targets": -1,
+                        "data": null,
+                        "render": function (data, type, full, meta) {
+                            return ' <a  class="btn btn-default btn-sm" href="annotations?key=' + full['dtc_molregno'] + '" target="_blank">Detail</a>';
+                        }
+
+                    }]
+                });
+
+
+                // tag cloud tip initiliazation
+
+                var tipMessage = function (value) {
+                    return '<span>' + value + '  bioactivities</span> \
+               <br/><span  class="additional"> Click here to view compound\'s Bioactivites in DTC </span>';
+                }
+               
+                // main function to initiate tag cloud
+                drivercloud("#drivers_cloud", preparecloud(compound.slice(0, 120), 'compound_name', 'bioactivities', 'dtc_molregno'), tipMessage, 'annotations?key=KEY');
+
+
+            });
+
+           
+
+            $('#myTabs a').click(function (e) {
+                e.preventDefault()
+                $(this).tab('show')
+            });
+
+
+
+        });
+
+
+        var chart = AmCharts.makeChart("TargetClass", {
+            "allLabels": [{
+                "text": "Target classification",
+                "align": "center",
+                "bold": true,
+
+            }],
+            "type": "pie",
+            //"startEffect": "easeOutSine",
+            "startDuration": 0,
+            //"labelsEnabled": false,
+            "theme": "light",
+            "addClassNames": true,
+            "marginTop": 25,
+            "marginBottom": 8,
+            "marginLeft": 0,
+            "marginRight": 0,
+            "pullOutRadius": 0,
+            "autoMargins": false,
+            "autoResize": true,
+            "fontSize": 12,
+            "legend": {
+                "enabled": false,
+            },
+            "innerRadius": "8%",
+            "defs": {
+                "filter": [{
+                    "id": "shadow",
+                    //"width": "100%",
+                    //"height": "200%",                   
+                    "feOffset": {
+                        "result": "offOut",
+                        "in": "SourceAlpha",
+                        "dx": 0,
+                        "dy": 0
+                    },
+                    "feGaussianBlur": {
+                        "result": "blurOut",
+                        "in": "offOut",
+                        "stdDeviation": 0
+                    },
+                    "feBlend": {
+                        "in": "SourceGraphic",
+                        "in2": "blurOut",
+                        "mode": "normal"
+                    }
+                }]
+            },
+            "dataProvider": [{
+                "Target_class": "CAMK protein kinase",
+                "No.": 61
+            }, {
+                "Target_class": "Other protein kinase",
+                "No.": 46
+            }, {
+                "Target_class": "CMGC protein kinase",
+                "No.": 53
+            }, {
+                "Target_class": "AGC protein kinase",
+                "No.": 47
+            }, {
+                "Target_class": "TKL protein kinase",
+                "No.": 31
+            }, {
+                "Target_class": "CK1 protein kinase ",
+                "No.": 7
+            }, {
+                "Target_class": "STE protein kinase ",
+                "No.": 42
+            }, {
+                "Target_class": "Atypical protein kinase",
+                "No.": 6
+            }, {
+                "Target_class": "TK protein kinase",
+                "No.": 83
+            }],
+            "valueField": "No.",
+            "titleField": "Target_class",
+            "balloonText": "[[title]]<br><span style='font-size:14px'><b>[[value]]</b> ([[percents]]%)</span>",
+            "exportConfig": {
+                "menuTop": "0px",
+                "menuItems": [{
+                    "icon": '../../Styles/amcharts_3.20.0/amcharts/images/export.png',
+                    "format": 'png'
+                }]
+            },
+
+            "responsive":
+                {
+                    "enabled": true
+                }
+        });
+
+        chart.addListener("init", handleInit);
+
+        chart.addListener("rollOverSlice", function (e) {
+            handleRollOver(e);
+        });
+
+        function handleInit() {
+            chart.legend.addListener("rollOverItem", handleRollOver);
+        }
+
+        function handleRollOver(e) {
+            var wedge = e.dataItem.wedge.node;
+            wedge.parentNode.appendChild(wedge);
+        }
+
+
+        // .............................................................................................. second chart ................................
+
+        var chart_act = AmCharts.makeChart("Activity_types", {
+            "allLabels": [{
+                "text": "Bioactivity statistics",
+                "align": "center",
+                "bold": true,
+                "labelRotation": 0,
+
+            }],
+            "type": "serial",
+            "fontSize": 12,
+            "theme": "light",
+            "legend": {
+                "horizontalGap": 1,
+                "maxColumns": 2,
+                "position": "bottom",
+                "useGraphSettings": true,
+                "markerSize": 10,
+            },
+
+            "dataProvider": [ {
+                "Act_type": "Ki",
+                "Wild type": 18620,
+                "Mutant target": 336,
+            },
+            {
+                "Act_type": "Kd",
+                "Wild type": 25636,
+                "Mutant target": 3427,
+                //"color": "#0A9AC1"
+            }, {
+                "Act_type": "Activity",
+                "Wild type": 115967,
+                "Mutant target": 1130,
+            },
+
+            {
+                "Act_type": "Other",
+                "Wild type": 9709,
+                "Mutant target": 2208,
+                //"color": "#0A9AC1"
+            }
+            ],
+            "valueAxes": [{
+                "stackType": "regular",
+                "axisAlpha": 0.3,
+                "gridAlpha": 0
+            }],
+            "graphs": [{
+                "balloonText": "<b>[[title]]</b><br><span style='font-size:14px'>[[category]]: <b>[[value]]</b></span>",
+                "fillAlphas": 0.7,
+                //"labelText": "[[percents]]%",
+                "labelText": "[[value]]",
+                "lineAlpha": 0.3,
+                "title": "Wild type",
+                "type": "column",
+                "color": "#000000",
+                "valueField": "Wild type",
+
+            }, {
+                "balloonText": "<b>[[title]]</b><br><span style='font-size:14px'>[[category]]: <b>[[value]]</b></span>",
+                "fillAlphas": 0.7,
+                "labelText": "[[value]]",
+                "lineAlpha": 0.3,
+                "title": "Mutant target",
+                "type": "column",
+                "color": "#000000",
+                "valueField": "Mutant target",
+
+            }],
+            "categoryField": "Act_type",
+            "categoryAxis": {
+                "gridPosition": "start",
+                "axisAlpha": 0,
+                "gridAlpha": 0,
+                "position": "left"
+            }
+          
+
+        });
+
+
+
+
+
+
+
+        
+        var isSelected = false;
+        
+    </script>
+{% endblock %}
+ 
+
+    
+{% block content %}
+
+  <div class="container-fluid">
+        <div class="row">
+            <div class="col-xs-12 col-ms-12 col-md-12 col-lg-12">
+                <div id="Home_Abstract">
+                    <h2>Drug Target Commons (DTC)</h2>
+                    <p>
+                       Drug Target Commons (DTC) is a crowd-sourcing platform to improve the consensus and use of drug-target interactions. The end users can search, view and download bioactivity data using various compound, target and publications identifiers. Expert users may also submit suggestions to edit and upload new  bioactivity data, as well as participate in the assay annotation and data curation processes.
+                    </p>
+                </div>
+            </div>
+         
+     
+        </div>
+        <div class="container-fluid">
+            <div id="DTC_intro" class=" row" >
+               
+                    <div class="search col-xs-11 col-sm-11 col-md-11 col-lg-11  nopadding">
+                         <form type="get" action="{% url 'search' %}" style="margin: 0">
+                        <div class="input-group">
+                           
+                            <input type="text" id="txtSearchClient" name="txtSearchClient" class="autosuggest form-control ui-autocomplete-input"  placeholder="Search bioactivities using compound, target or publication:" autocomplete="off" role="textbox" aria-autocomplete="list" aria-haspopup="true">
+                             <span class="input-group-btn">
+                            <button  title="Click here search" class="btn btn-default" type="submit"><span class="glyphicon glyphicon-search"></span></button>
+                          </span>
+                         
+                 <!--            <span class="input-group-btn ">
+                                <a id="ContentPlaceHolder1_btnSearch" title="Click here search" class="btn btn-default" href="javascript:__doPostBack('ctl00$ContentPlaceHolder1$btnSearch','')"><span class="glyphicon glyphicon-search"></span></a>
+                            </span> -->
+                        </div>
+            
+                         </form>    
+                    </div>
+                    <a id='search_info'  href="#"  data-toggle="modal" data-placement="top" data-target="#model_Help_Search" title="Click here to see help on searching bioactivities"><span data-toggle="tooltip" data-placement="bottom" style="cursor: pointer;" title=""><span class="glyphicon glyphicon-question-sign glyphicon-large"></span></span></a>
+                        
+                       
+                    
+                
+           
+            </div>
+             <div id="Div1" class="row" style="margin-bottom:5px">
+                   <div class="col-xs-8 col-sm-8 col-md-8 col-lg-8  nopadding">
+                             <asp:Label ID="lblError" runat="server" CssClass="local_label-danger"></asp:Label>    
+                   </div>
+            </div>
+            <div class="row">
+                <div class="panel panel-default">
+                    <div class="panel-heading"><b>Classification of annotated targets and bioactivity types </b></div>
+                    <div class="panel-body">
+                        <div id="col_targetCLass" class="col-xs-7 col-ms-7 col-md-5 col-lg-5">
+                           
+                         <div id="TargetClass"></div>                            
+                        </div>
+                         <div id="Div2" class="col-xs-5 col-ms-5 col-md-4 col-lg-4 nopadding">
+                           
+                            <div id="Activity_types"></div>
+                        </div>
+                             <div id="col_WildMUT" class="col-xs-12 col-ms-12 col-md-3 col-lg-3 nopadding">
+                  
+                              
+                                  <ul class="list-group ">
+                                        <li  style="font-family:Verdana;font-weight:bold;text-align:center;list-style-type: none;font-size:12px;color:#000">Overall statistics</li>
+                                        <li class="list-group-item " style='padding-bottom:0px;padding-top:20px'>
+                                            <div class="row">
+                                                <div class="col-xs-4 col-ms-4 col-md-4 col-lg-4 .offset-md-1"></div>
+                                                  <div class="col-xs-4 col-ms-4 col-md-4 col-lg-4"><strong>Assay annotation</strong></div>
+                                                   <div class="col-xs-3 col-ms-3 col-md-3 col-lg-3"><strong>Total</strong></div>
+                                            </div>
+
+  
+                                        </li>
+                                        <li class="list-group-item borderless">
+
+
+                                            <div class="row">
+                                                <div class="col-xs-4 col-ms-4 col-md-4 col-lg-4 .offset-md-1" ><strong>Compounds</strong></div>
+                                               <div class="col-xs-4 col-ms-4 col-md-4 col-lg-4"><span class="badge badge-details">4,276</span></div>
+                                                 <div class="col-xs-3 col-ms-3 col-md-3 col-lg-3"><span class="badge badge-details">1,746,997</span></div>
+                                         
+                                                
+                                            </div>
+
+  
+                                        </li>
+                                        <li class="list-group-item borderless">
+
+
+                                            <div class="row">
+                                                <div class="col-xs-4 col-ms-4 col-md-4 col-lg-4 .offset-md-1"><strong>Targets</strong></div>
+                                                <div class="col-xs-4 col-ms-4 col-md-4 col-lg-4"><span class="badge badge-details">1,007</span></div>
+                                                <div class="col-xs-4 col-ms-3 col-md-3 col-lg-3"><span class="badge badge-details">13,023</span></div>
+                                               
+                                            </div>
+
+  
+                                        </li>
+                                     <li class="list-group-item borderless">
+
+
+                                            <div class="row">
+                                                <div class="col-xs-4 col-ms-4 col-md-4 col-lg-4 .offset-md-1"><strong>Publications</strong></div>
+                                                <div class="col-xs-4 col-ms-4 col-md-4 col-lg-4"><span class="badge badge-details">346</span></div>
+                                                <div class="col-xs-3 col-ms-3 col-md-3 col-lg-3"><span class="badge badge-details">69955</span></div>
+                                               
+                                            </div>
+
+  
+                                        </li>
+                                        <li class="list-group-item borderless">
+                                            <div class="row">
+                                                 <div class="col-xs-4 col-ms-4 col-md-4 col-lg-4 .offset-md-1"><strong>Bioactivities</strong></div>
+                                                <div class="col-xs-4 col-ms-4 col-md-4 col-lg-4"><span class="badge badge-details">204,901</span></div>
+                                                 <div class="col-xs-3 col-ms-3 col-md-3 col-lg-3"><span class="badge badge-details">14,820,874 </span></div>
+                                            </div>
+                                        </li>
+                                    </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+
+        <div class="container-fluid">
+            <div class='row fluid_margin'>
+                <div class="panel panel-default">
+                    <div class="panel-heading"><b>Annotated compounds</b> </div>
+                  
+                    <div class="panel-body">
+
+                        <div role="tabpanel">
+
+                            <ul id="tabs" class="nav nav-pills" role="tablist">
+                                <li role="presentation" class="active"><a href="#cloudtab" aria-controls="cloudtab" role="tab" data-toggle="tab" aria-expanded="true">Cloud</a></li>
+
+                                <li role="presentation" class=""><a href="#tabletab" aria-controls="tabletab" role="tab" data-toggle="tab" aria-expanded="false">Table</a></li>
+                            </ul>
+
+                            <div class="tab-content">
+                                <div role="tabpanel" class="tab-pane active" id="cloudtab">
+                                    <div id="drivers_cloud"></div>
+                                    <div class="caption text-center">The font-size of the compound's name is relative to the number of bioactivities </div>
+
+                                </div>
+                                <div role="tabpanel" class="tab-pane" id="tabletab">
+                                    <div>
+                                        <table id="data_table" class="display" style='width:100%'></table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                 
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+
+    <div class="modal fade" id="model_Help_Search" role="dialog">
+        <div class="modal-dialog">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title"><b>How to search bioactivities</b> </h4>
+                </div>
+                <div class="modal-body">
+                    <p class="MsoListParagraphCxSpMiddle">
+                        <span lang="EN-US">User may search <b>(unannotated)</b>bioactivity and assay information using: compounds, targets, publications (default is compound), and <b>add/edit existing annotations on the fly</b> and submit them for review before they are added into the database. Autosuggest feature may help user to choose appropriate search item. </span>
+                    </p>
+
+                    <p class="MsoListParagraphCxSpMiddle">
+                        <b><span lang="EN-US">a.<span style="font-style: normal; font-variant: normal; font-weight: normal; font-stretch: normal; font-size: 7pt; font-family: 'Times New Roman';">&nbsp;&nbsp;&nbsp;<span class="Apple-converted-space">&nbsp;</span></span>Compounds</span></b>
+                    </p>
+                    <p class="MsoListParagraphCxSpMiddle">
+                        <span lang="EN-US">Users can search a compound by name or synonyms, standard inchikey or any of 26 IDs : Chembl, bindingdb,  molport, surechembl, actor, nmrshiftdb2, chebi, hmdb, fdasrs, selleck, lincs, drugbank, nih_ncc, pharmgkb, ibm, nikkaji,  pubchem,  emolecules, zinc, recon, mcule, pubchem_dotf, gtopdb, pdb, pubchem_tpharma, kegg_ligand. Partial and exact searches are supportable for compound name or synonyms; while inchikey or IDs must have exact match. </span>
+                    </p>
+                    <p class="MsoListParagraphCxSpMiddle">
+                        <b><span lang="EN-US">b.<span style="font-style: normal; font-variant: normal; font-weight: normal; font-stretch: normal; font-size: 7pt; font-family: 'Times New Roman';">&nbsp;&nbsp;&nbsp;<span class="Apple-converted-space">&nbsp;</span></span>Targets</span></b>
+                    </p>
+                    <p class="MsoListParagraphCxSpMiddle">
+                        <span lang="EN-US">Target search can be made by target name, gene name  and IDs : UniProtKB-AC,  UniProtKB-ID,  EMBL-CDS, Ensembl, PIR, PubMed, NCBI-taxon, Ensembl_TRS, MIM, UniGene, UniRef50, RefSeq, GO, PDB, UniParc, Additional_PubMed, EMBL, GI, GeneID, Chembl, UniRef100, UniRef90, Ensembl_PRO. Partial and exact searches are supportable for target name and gene name; while IDs must have exact match. </span>
+                    </p>
+                    <p class="MsoListParagraphCxSpMiddle">
+                        <b><span lang="EN-US">c.<span style="font-style: normal; font-variant: normal; font-weight: normal; font-stretch: normal; font-size: 7pt; font-family: 'Times New Roman';">&nbsp;&nbsp;&nbsp;<span class="Apple-converted-space">&nbsp;</span></span>Publications</span></b>
+                    </p>
+                    <p class="MsoListParagraphCxSpMiddle">
+                        <span lang="EN-US">User can also search assay and bioactivity information using &#8216;<b>Pubmed ID</b>&#8217;. We have data about 50,000 publications.</span>
+                    </p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

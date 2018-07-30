@@ -1,0 +1,349 @@
+
+
+{% extends "base.html" %}
+ {% load staticfiles %}
+{% block head_title %}Submission{% endblock %}
+{% block head_css %}
+
+ <link href="{% static 'css/jqx.base.css' %}" rel="stylesheet" type="text/css" />
+    <link href="{% static 'css/jqx.bootstrap.css' %}" rel="stylesheet" type="text/css" />
+
+    <link href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.1/themes/base/jquery-ui.css" rel="stylesheet" type="text/css" />
+
+
+
+    <style>
+        .green:not(.jqx-grid-cell-hover):not(.jqx-grid-cell-selected), .jqx-widget .green:not(.jqx-grid-cell-hover):not(.jqx-grid-cell-selected) {
+            color: black;
+            background-color: #b6ff00;
+        }
+
+        .yellow:not(.jqx-grid-cell-hover):not(.jqx-grid-cell-selected), .jqx-widget .yellow:not(.jqx-grid-cell-hover):not(.jqx-grid-cell-selected) {
+            color: black;
+            background-color: yellow;
+        }
+
+        .red:not(.jqx-grid-cell-hover):not(.jqx-grid-cell-selected), .jqx-widget .red:not(.jqx-grid-cell-hover):not(.jqx-grid-cell-selected) {
+            color: black;
+            background-color: #e83636;
+        }
+
+        .editedRow {
+            color: #b90f0f !important;
+            font-style: italic;
+        }
+
+        .editedCell {
+            background-color: #d6e9c6 !important;
+            font-style: italic;
+        }
+    </style>
+
+{% endblock %}
+
+
+
+{% block head_javascript %}
+
+
+
+     <!-- <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.1/jquery-ui.min.js"></script> -->
+
+    <script src="{% static 'js/vendor/Jqxwidgets/jqxcore.js' %}" type="text/javascript"></script>
+    <script src="{% static 'js/vendor/Jqxwidgets/jqxbuttons.js' %}" type="text/javascript"></script>
+    <script src="{% static 'js/vendor/Jqxwidgets/jqxdata.js' %}" type="text/javascript"></script>
+    <script src="{% static 'js/vendor/Jqxwidgets/jqxgrid.js' %}" type="text/javascript"></script>
+    <script src="{% static 'js/vendor/Jqxwidgets/jqxgrid.selection.js' %}" type="text/javascript"></script>
+    <script src="{% static 'js/vendor/Jqxwidgets/jqxmenu.js' %}" type="text/javascript"></script>
+    <script src="{% static 'js/vendor/Jqxwidgets/jqxscrollbar.js' %}" type="text/javascript"></script>
+
+
+    <script type="text/javascript" src="{% static 'js/vendor/Jqxwidgets/jqxscrollbar.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/vendor/Jqxwidgets/jqxlistbox.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/vendor/Jqxwidgets/jqxdropdownlist.js' %}"></script>
+
+
+    <script type="text/javascript" src="{% static 'js/vendor/Jqxwidgets/jqxgrid.pager.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/vendor/Jqxwidgets/jqxgrid.sort.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/vendor/Jqxwidgets/jqxgrid.filter.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/vendor/Jqxwidgets/jqxcheckbox.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/vendor/Jqxwidgets/jqxgrid.edit.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/vendor/Jqxwidgets/jqxgrid.columnsresize.js' %}"></script>
+
+    <script type="text/javascript" src="{% static 'js/vendor/Jqxwidgets/jqxpanel.js' %}"></script>
+    <script type="text/javascript">
+        var editedRows = new Array();
+        var editedCells = new Array();
+        var editable = false;
+        $(document).ready(function () {
+          $('#edit').addClass('disabled'); // Disables visually
+          $('#edit').prop('disabled', true);
+            var source =
+            {
+              updaterow: function (rowid, rowdata, commit) {
+                  // that function is called after each edit.
+                  var html = '';
+                  var rowindex = $("#jqxgrid").jqxGrid('getrowboundindexbyid', rowid);
+                  index = editedRows.map(function (e) { return e.index; }).indexOf(rowid)
+                  if (index != -1) {
+                      editedRows[index] = { index: rowindex, data: rowdata }
+                  } else {
+                      editedRows.push({ index: rowindex, data: rowdata });
+                  }
+                  if (editedRows.length > 0) {
+                      $('#edit').removeClass('disabled'); // Disables visually
+                      $('#edit').prop('disabled', false); // Disables visually + functionally
+                  }
+                  commit(true);
+              },
+                async: false,
+                url: '/getsubmissions/',
+                datatype: "json"
+            };
+
+            var dataAdapter = new $.jqx.dataAdapter(source,
+                 {
+                     contentType: 'application/json; charset=utf-8',
+                     loadServerData: function (serverdata, source, callback) {
+                         $.ajax({
+                             type: "POST",
+                             contentType: "application/json; charset=utf-8",
+                             url: source.url,
+                             data:JSON.stringify({'user': '{{user}}' }),
+                             dataType: "json",
+                             success: function (data) {
+                                 callback({ records: data });
+                             }
+                         });
+                     }
+
+                 }
+             );
+
+
+           
+            var cellclass = function (row, datafield, value) {
+
+                for (var i = 0; i < editedCells.length; i++) {
+                    if(editedCells[i].row == row && editedCells[i].column == datafield) {
+                        return "editedCell";
+                    }
+                }
+
+
+            }
+            var cellvaluechanging = function (row, datafield, columntype, oldvalue, newvalue) {
+                if (oldvalue != newvalue) {
+                    editedCells.push({ row: row, column: datafield });
+                }
+            };
+
+            $("#jqxgrid").jqxGrid(
+            {
+                width: '100%',
+                height: '600px',
+                source: dataAdapter,
+                editable:true,
+                filterable: true,
+                columnsresize: true,
+                autoshowfiltericon: false,
+                sortable: true,
+                altrows: true,
+                theme: 'bootstrap',
+                pageable: true,
+                pagesizeoptions: ['25', '50', '100'],
+                ready: function () {
+                    $("#jqxgrid").jqxGrid({ pagesize: 25 });
+                },
+
+                columns: [
+
+                   
+                      { text: 'Status', editable: false,datafield: 'status',  width: 80, cellclassname: cellclass, cellvaluechanging: cellvaluechanging },
+                      { text: "Curator's email", pinned: true, datafield: 'curator_email', width: 200 },
+                      { text: 'Compound ID', datafield: 'compound_id',  width: 200, cellsrenderer: linkrenderer, cellclassname: cellclass, cellvaluechanging: cellvaluechanging },
+                      { text: 'Standard Inchikey',  datafield: 'standard_inchi_key', width: 250, cellclassname: cellclass, cellvaluechanging: cellvaluechanging },
+                      { text: 'Compound Name', datafield: 'compound_name', width: 200,editable: false },
+                      { text: 'Target ID', datafield: 'target_id', width: 200,  cellsrenderer: linkrenderer, cellclassname: cellclass, cellvaluechanging: cellvaluechanging },
+                      { text: 'Target Name', datafield: 'target_pref_name', width: 200 ,editable: false},
+                        {
+                            text: "Wild type or mutated", datafield: 'wildtype_or_mutant', width: 200, columntype: 'dropdownlist', cellclassname: cellclass, cellvaluechanging: cellvaluechanging,
+                            initeditor: function (row, cellvalue, editor) {
+                                editor.jqxDropDownList({ source: wildType });
+                            }
+                        },
+                   
+                      { text: "Mutation information", datafield: "mutation_info", width: 200, cellclassname: cellclass, cellvaluechanging: cellvaluechanging },
+                      { text: 'PubMed ID', datafield: 'pubmed_id', width: 200, cellsrenderer: linkrenderer, cellclassname: cellclass, cellvaluechanging: cellvaluechanging },
+                      { text: 'End Point Standard Type', datafield: 'ep_standard_type', width: 200, cellclassname: cellclass, cellvaluechanging: cellvaluechanging },
+                      { text: 'End Point Standard Relation', datafield: 'ep_standard_relation', width: 200, cellclassname: cellclass, cellvaluechanging: cellvaluechanging },
+                      { text: 'End Point Standard Value', datafield: 'ep_standard_value', width: 200, cellclassname: cellclass, cellvaluechanging: cellvaluechanging },
+                      { text: 'End Point Standard Units', datafield: 'ep_standard_units', width: 200, cellclassname: cellclass, cellvaluechanging: cellvaluechanging },
+                      {
+                          text: "Endpoint Mode of Action", datafield: 'endpoint_actionmode_id', width: 200, columntype: 'dropdownlist', cellclassname: cellclass, cellvaluechanging: cellvaluechanging,
+                          initeditor: function (row, cellvalue, editor) {
+                              editor.jqxDropDownList({ source: EMA });
+                          }
+                      },
+                      {
+                          text: "Assay Format", datafield: 'assay_format_id', width: 200, columntype: 'dropdownlist', cellclassname: cellclass, cellvaluechanging: cellvaluechanging,
+                          initeditor: function (row, cellvalue, editor) {
+                              editor.jqxDropDownList({ source: assayFormat });
+                          }
+                      },
+                      {
+                          text: "Assay Type", datafield: 'assay_type_id', width: 200, columntype: 'dropdownlist', cellclassname: cellclass, cellvaluechanging: cellvaluechanging,
+                          initeditor: function (row, cellvalue, editor) {
+                              editor.jqxDropDownList({ source: assayType});
+                          }
+                      },
+                      {
+                          text: "Assay Sub Type", datafield: 'assay_sub_type_id', width: 200, columntype: 'dropdownlist', cellclassname: cellclass, cellvaluechanging: cellvaluechanging,
+                          initeditor: function (row, cellvalue, editor) {
+                              editor.jqxDropDownList({ source: assaySubtype });
+                          }
+                      },
+                      {
+                          text: "Inhibitor Type", datafield: 'inhibitor_type_id', width: 200, columntype: 'dropdownlist', cellclassname: cellclass, cellvaluechanging: cellvaluechanging,
+                          initeditor: function (row, cellvalue, editor) {
+                              editor.jqxDropDownList({ source: inhibitorType });
+                          }
+                      },
+                      {
+                          text: "Detection Technology", datafield: 'detection_technology_id', width: 200, columntype: 'dropdownlist', cellclassname: cellclass, cellvaluechanging: cellvaluechanging,
+                          initeditor: function (row, cellvalue, editor) {
+                              editor.jqxDropDownList({ source: detectionTech });
+                          }
+                      },
+                    
+                      { text: 'Compound concentration value', datafield: 'compound_concentration_value', width: 200, cellclassname: cellclass, cellvaluechanging: cellvaluechanging },
+                      { text: 'Compound concentration value units', datafield: 'compound_concentration_value_unit', width: 200, cellclassname: cellclass, cellvaluechanging: cellvaluechanging },
+                      { text: "Substrate's type", datafield: "substrate_type", width: 200, cellclassname: cellclass, cellvaluechanging: cellvaluechanging },
+                      { text: "Substrate Type's Standard Relation", datafield: "substrate_relation", width: 200, cellclassname: cellclass, cellvaluechanging: cellvaluechanging },
+                      { text: "Substrate Type's Standard Value", datafield: "substrate_value", width: 200, cellclassname: cellclass, cellvaluechanging: cellvaluechanging },
+                      { text: "Substrate Type's Standard Units", datafield: "substrate_units", width: 200, cellclassname: cellclass, cellvaluechanging: cellvaluechanging },
+                      { text: "Assay cell Type", datafield: 'assay_cell_type', width: 200, cellclassname: cellclass, cellvaluechanging: cellvaluechanging },
+                      { text: "Assay Description", datafield: 'assay_description', width: 200, cellclassname: cellclass, cellvaluechanging: cellvaluechanging },
+                      { text: "Activity Comments", datafield: 'activity_comment', width: 200, cellclassname: cellclass, cellvaluechanging: cellvaluechanging },
+                      { text: "Title", datafield: "title", width: 200, cellclassname: cellclass, cellvaluechanging: cellvaluechanging },
+                      { text: "Journal", datafield: "journal", width: 200, cellclassname: cellclass, cellvaluechanging: cellvaluechanging },
+                      { text: "Year", datafield: 'year', width: 200, cellclassname: cellclass, cellvaluechanging: cellvaluechanging },
+                      { text: "Volume", datafield: 'volume', width: 200, cellclassname: cellclass, cellvaluechanging: cellvaluechanging },
+                      { text: "Issue", datafield: 'issue', width: 200, cellclassname: cellclass, cellvaluechanging: cellvaluechanging },
+                      { text: "Authors", datafield: 'authors', width: 200, cellclassname: cellclass, cellvaluechanging: cellvaluechanging },
+                      { text: "Annotation comments", datafield: 'annotation_comments', width: 200, cellclassname: cellclass, cellvaluechanging: cellvaluechanging },
+                      { text: "User", datafield: 'curator_name', width: 200, cellclassname: cellclass, cellvaluechanging: cellvaluechanging },
+                      // { text: "Time", datafield: 'time_stamp', width: 200, cellclassname: cellclass, cellvaluechanging: cellvaluechanging },
+                      { text: "Assay ID", datafield: 'dtc_assay_id', width: 200, cellclassname: cellclass, cellvaluechanging: cellvaluechanging ,hidden:true},
+                      { text: "Local Target ID", datafield: 'dtc_tid', width: 200, cellclassname: cellclass, cellvaluechanging: cellvaluechanging ,hidden:true},
+                      { text: "Activity ID", datafield: 'dtc_activity_id', width: 200, cellclassname: cellclass, cellvaluechanging: cellvaluechanging ,hidden:true},
+                      { text: "Molregno", datafield: 'dtc_molregno', width: 200, cellclassname: cellclass, cellvaluechanging: cellvaluechanging ,hidden:true},
+                      { text: "Record ID", datafield: 'dtc_record_id', width: 200, cellclassname: cellclass, cellvaluechanging: cellvaluechanging,hidden:true },
+                      { text: "Document ID", datafield: 'dtc_doc_id', width: 200, cellclassname: cellclass, cellvaluechanging: cellvaluechanging,hidden:true }
+
+                    ]
+
+            });
+
+
+
+
+            $('#edit').click(function (e) {
+
+                  e.preventDefault();
+                  $('#send').toggleClass('active');
+                  edit_submissions(user, email)
+                  return false;
+              })
+
+
+        });
+
+        function edit_submissions() {
+            $("#edit").toggleClass('active');
+            var result = new Array();
+              $.each(editedRows, function (index, val) {
+                  result.push(val.data);
+            });
+ 
+            $.ajax({
+                  type: "POST",
+                  url: "/edit_submissions/",
+                  data: JSON.stringify({'json_table':result }),
+                  contentType: "application/json; charset=utf-8",
+                  dataType: "json",
+                  error: function (xhr, ajaxOptions, thrownError) {
+                      console.log(xhr.responseText);
+                  },
+                  success: function (msg) {
+                      var count = result.length;
+                      $("#edit").toggleClass('active');
+                      alertify.success(count + 'bioactivities edited Successfully');
+                  }
+              });
+        }
+
+        var linkrenderer = function (row, column, value) {
+            var href = '';
+            if (column == 'compound_id') {
+                href = "https://www.ebi.ac.uk/chembl/compound/inspect/" + value;
+            } else if (column == 'target_id') {
+                href = "http://www.uniprot.org/uniprot/?query=accession:" + value.replace(',', 'or accession:');
+
+            } else {
+                href = "http://www.ncbi.nlm.nih.gov/pubmed/?term=" + value;
+            }
+
+            return '<div style="margin: 5px;"><a target= "_blank" href="' + href + '">' + value + '</a></div>';
+        }
+
+        // get all selected records.
+        function getSelection() {
+            var rows = $("#jqxgrid").jqxGrid('selectedrowindexes');
+            var selectedRecords = new Array();
+            for (var m = 0; m < rows.length; m++) {
+                var row = $("#jqxgrid").jqxGrid('getrowdata', rows[m]);
+                selectedRecords[selectedRecords.length] = row;
+            }
+            return selectedRecords
+
+        }
+
+
+
+
+
+
+    </script>
+
+
+
+
+
+{% endblock %}
+   
+
+
+  
+
+
+{% block content %}
+
+ <div class="container-fluid">
+        <h3>DTC submitted data:</h3>
+        <div id="jqxgrid"></div>
+
+
+        
+        <div id="eventslog" style="width: 100%; margin-top: 10px">
+                     <button id="edit"  class="btn btn-default has-spinner">
+                    <span class="spinner"><i class="fa fa-refresh fa-spin fa fa-fw"></i></span>
+                   Edit submissions
+        </button>
+        </div>
+
+   
+        
+    </div>
+
+{% endblock %}

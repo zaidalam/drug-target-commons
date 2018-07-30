@@ -1,0 +1,731 @@
+
+{% extends "base.html" %}
+{% load staticfiles %}
+{% block head_title %}Search{% endblock %}
+
+{% block head_css %}
+
+    <link href="{% static 'css/jqx.base.css' %}" rel="stylesheet" type="text/css" />
+    <link href="{% static 'css/jqx.bootstrap.css' %}" rel="stylesheet" type="text/css" />
+    <link href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.1/themes/base/jquery-ui.css" rel="stylesheet" type="text/css" />
+    <style>
+        .green:not(.jqx-grid-cell-hover):not(.jqx-grid-cell-selected), .jqx-widget .green:not(.jqx-grid-cell-hover):not(.jqx-grid-cell-selected) {
+            color: black;
+            background-color: #b6ff00;
+        }
+
+        .yellow:not(.jqx-grid-cell-hover):not(.jqx-grid-cell-selected), .jqx-widget .yellow:not(.jqx-grid-cell-hover):not(.jqx-grid-cell-selected) {
+            color: black;
+            background-color: yellow;
+        }
+
+        .red:not(.jqx-grid-cell-hover):not(.jqx-grid-cell-selected), .jqx-widget .red:not(.jqx-grid-cell-hover):not(.jqx-grid-cell-selected) {
+            color: black;
+            background-color: #e83636;
+        }
+
+        .editedRow {
+            color: #b90f0f !important;
+            font-style: italic;
+        }
+
+        .editedCell {
+            background-color: #d6e9c6 !important;
+            font-style: italic;
+        }
+
+    </style>
+
+{% endblock %}
+
+
+
+{% block head_javascript %}
+
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.1/jquery-ui.min.js"></script>
+    <script src="{% static 'js/vendor/jqwidgets/jqxcore.js' %}" type="text/javascript"></script>
+    <script src="{% static 'js/vendor/jqwidgets/jqxbuttons.js' %}" type="text/javascript"></script>
+    <script src="{% static 'js/vendor/jqwidgets/jqxdata.js' %}" type="text/javascript"></script>
+    <script src="{% static 'js/vendor/jqwidgets/jqxgrid.js' %}" type="text/javascript"></script>
+    <script src="{% static 'js/vendor/jqwidgets/jqxgrid.selection.js' %}" type="text/javascript"></script>
+    <script src="{% static 'js/vendor/jqwidgets/jqxmenu.js' %}" type="text/javascript"></script>
+    <script src="{% static 'js/vendor/jqwidgets/jqxscrollbar.js' %}" type="text/javascript"></script>
+    <script type="text/javascript" src="{% static 'js/vendor/jqwidgets/jqxscrollbar.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/vendor/jqwidgets/jqxlistbox.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/vendor/jqwidgets/jqxdropdownlist.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/vendor/jqwidgets/jqxgrid.pager.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/vendor/jqwidgets/jqxgrid.sort.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/vendor/jqwidgets/jqxgrid.filter.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/vendor/jqwidgets/jqxcheckbox.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/vendor/jqwidgets/jqxgrid.edit.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/vendor/jqwidgets/jqxgrid.columnsresize.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/vendor/jqwidgets/jqxpanel.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/vendor/jqwidgets/jqxtabs.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/vendor/jqwidgets/jqxwindow.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/vendor/jqwidgets/jqxtooltip.js' %}"></script>
+
+    <script type="text/javascript">
+        var popup_compound = (function () {
+            //Creating the demo window
+            function _createWindow() {
+                var jqxWidget = $('#jqxgrid');
+                var offset = jqxWidget.offset();
+                $('#window_compound').jqxWindow({
+                    isModal: false, 
+                    autoOpen: false,
+                    position: { x: offset.left + 200, y: offset.top + 100},
+                    maxHeight: 1200, maxWidth: 1200, minHeight: 300, minWidth: 300, height: 500, width: 600,
+                    initContent: function () {
+                        $('#c_tabs').jqxTabs({ height: '100%', width:  '100%' });
+                        $('#window_compound').jqxWindow('focus');
+                        $('#c_tabs').on('selected', function (event) {
+                        var pageIndex = event.args.item + 1;
+                        var molregno = $('#molregno').val()
+                            if (pageIndex == 1){
+                                loadPageCompound('/getcrfinfo' + '?molregno=' + molregno,pageIndex)
+                            }else{
+                                loadPageCompound('/diseaseinfo' + '?molregno=' + molregno,pageIndex)
+                            }
+                        });
+                  
+                    }
+                });
+            };
+            return {
+                config: {
+                    dragArea: null
+                },
+                init: function () {
+                    //Adding jqxWindow
+                    _createWindow();
+                }
+            };
+        } ());
+        var popup_target = (function () {
+            //Creating the demo window
+            function _createWindow() {
+                var jqxWidget = $('#jqxgrid');
+                var offset = jqxWidget.offset();
+                $('#window_target').jqxWindow({
+                    isModal: false, 
+                    autoOpen: false,
+                    position: { x: offset.left + 200, y: offset.top + 100},
+                    maxHeight: 1200, maxWidth: 1200, minHeight: 300, minWidth: 300, height: 500, width: 600,
+                    initContent: function () {
+                        $('#t_tabs').jqxTabs({ height: '100%', width:  '100%' });
+                        $('#window_target').jqxWindow('focus');
+                        $('#t_tabs').on('selected', function (event) {
+                            var pageIndex = event.args.item + 1;
+
+                            var tid = $('#tid').val()
+                            if (pageIndex == 1){
+                                loadPageTarget('/gettargetcrfinfo' + '?tid=' + tid,pageIndex)
+                            }else{
+                                loadPageTarget('/targetdiseaseinfo' + '?tid=' + tid,pageIndex)
+                            }
+                            
+                        });
+                  
+                    }
+                });
+            };
+            return {
+                config: {
+                    dragArea: null
+                },
+                init: function () {
+                    //Adding jqxWindow
+                    _createWindow();
+                }
+            };
+        } ());
+        var popup_mutant = (function () {
+            //Creating the demo window
+            function _createWindow() {
+                var jqxWidget = $('#jqxgrid');
+                var offset = jqxWidget.offset();
+                $('#window_mutant').jqxWindow({
+                    isModal: false, 
+                    autoOpen: false,
+                    position: { x: offset.left + 200, y: offset.top + 100},
+                    maxHeight: 1200, maxWidth: 1200, minHeight: 300, minWidth: 300, height: 500, width: 600,
+                    initContent: function () {
+                        $('#m_tabs').jqxTabs({ height: '100%', width:  '100%' });
+                        $('#window_mutant').jqxWindow('focus');
+                        $('#m_tabs').on('selected', function (event) {
+
+                                
+                            var mutant = $('#mutant').val()
+                            
+                            loadPageTarget('/getmutantinfo' + '?mutant=' + mutant)
+                         
+                            
+                        });
+                  
+                    }
+                });
+            };
+            return {
+                config: {
+                    dragArea: null
+                },
+                init: function () {
+                    //Adding jqxWindow
+                    _createWindow();
+                }
+            };
+        } ());
+        $(document).ready(function () {
+            //Initializing the popup
+            popup_compound.init();
+            popup_target.init();
+            popup_mutant.init();
+            //Getting the source data with ajax GET request
+            SearchText();
+          
+            $('#txtSearchClient').val(get('txtSearchClient'));
+
+                    var source =
+                    {
+                        async: false,
+                        record: 'Table',
+                        url: '/initial_search/', 
+                        datatype: "json"
+                    };
+                    
+                    var dataAdapter = new $.jqx.dataAdapter(source,
+                        {
+                            contentType: 'application/json; charset=utf-8',
+                            loadServerData: function (serverdata, source, callback) {
+                                $.ajax({
+                                    type: "POST",
+                                    contentType: "application/json; charset=utf-8",
+                                    url: source.url,
+                                    data: JSON.stringify({'searchText': get('txtSearchClient') }),
+                                    dataType: "json",
+                                    success: function (data) {
+                             
+                                        callback({ records: data });
+                                    },
+                                    error: function (xhr, ajaxOptions, thrownError) {
+                                        // console.log(xhr.responseText);
+                                    }
+                               
+                                });    
+                            }
+                        }
+                    );
+             
+                    $("#jqxgrid").jqxGrid(
+                                          {
+                                              width: '100%',
+                                              height:'600px',
+                                              source: dataAdapter,
+                                              filterable: true,
+                                              sortable: true,
+                                              theme: 'bootstrap',
+                                              selectionmode: 'multiplecellsadvanced',
+                                              pageable: true,
+                                              columnsresize: true,
+                                              enabletooltips: true,
+                                              autoshowfiltericon: false,
+                                              ready: function () {
+                                                     $("#jqxgrid").jqxGrid({ pagesize: 20 });
+                                              },
+
+                                                pagesizeoptions: ['20', '50', '100'],    
+                                              columns: [
+                                            {
+                                                text:'', datafield: 'Edit',width:80,filterable: false,columntype: 'button', cellsrenderer: function () {
+                                                    return "Bioactivities";
+                                                }, buttonclick: function (row) {
+                                                    editrowindex = row;
+                                                    var ID = $('#jqxgrid').jqxGrid('getcellvalue', row, 'dtc_molregno');
+                                                    var category = $('#jqxgrid').jqxGrid('getcellvalue', row, 'category');
+                                                    var name = $('#jqxgrid').jqxGrid('getcellvalue', row, 'name');
+                                                    var url = "";
+                                                    if (category == "Compound")
+                                                    {
+                                                        ID = $('#jqxgrid').jqxGrid('getcellvalue', row, 'dtc_molregno');
+                                                        if (name){ 
+                                                            url = "/bioactivities?id=" + ID + "&category=" + category + "&name=" + name;
+                                                        }else{
+                                                            url = "/bioactivities?id=" + ID + "&category=" + category;
+                                                        }
+                                                    }
+                                                    else if (category == "Target") {
+                                                        ID = $('#jqxgrid').jqxGrid('getcellvalue', row, 'tid');
+                                                        if (name){ 
+                                                            url = "/bioactivities?id=" + ID + "&category=" + category + "&name=" + name;
+                                                        }else{
+                                                            url = "/bioactivities?id=" + ID + "&category=" + category;
+                                                        }
+                                                           
+                                                    }
+                                                    else if (category == "Mutation") {
+                                                         ID = $('#jqxgrid').jqxGrid('getcellvalue', row, 'mutation_info');
+                                                         url = "/bioactivities?id=" + ID + "&category=" + category;
+                                                    }
+                                                    else 
+                                                    {
+                                                         ID = $('#jqxgrid').jqxGrid('getcellvalue', row, 'name');
+                                                         url = "/bioactivities?id=" + ID + "&category=" + category;
+                                                    }
+                                                    window.open(url,'_blank');
+                                                   
+                                                }
+                                            },
+                                            // {text:'', datafield: 'ref',filterable: false,width:20, cellsrenderer:imagerenderer},
+                                            { text: 'Category', datafield: 'category',width:200,cellsrenderer:imagerenderer},
+                                            { text: 'Mutation Information', datafield: 'mutation_info', width: 500 },
+                                            { text: 'Name', datafield: 'name' },
+                                            { text: 'Local Target ID', datafield: 'tid', hidden: true }
+                                             ]
+                  });
+                 
+
+
+         });
+ 
+        
+        var openPopup = function (row) {
+            var category = $("#jqxgrid").jqxGrid('getcellvalue', row, 'category');
+            $("#category").val(category);
+            if (category == "Compound")
+            {
+                $("#window_target").jqxWindow('close');
+                $("#window_mutant").jqxWindow('close');
+                var molregno = $('#jqxgrid').jqxGrid('getcellvalue', row, 'dtc_molregno');
+                $("#molregno").val(molregno);
+
+                var offset = $("#jqxgrid").offset();
+                $("#window_compound").jqxWindow({ position: { x: parseInt(offset.right) + 60, y: parseInt(offset.top) + 20} });
+                 loadPageCompound('/getcrfinfo' + '?molregno=' + molregno,1)
+                $('#window_compound').jqxWindow('open');    
+            }
+            if (category == "Target")
+            {
+                $("#window_compound").jqxWindow('close');
+                $("#window_mutant").jqxWindow('close');
+                var tid = $('#jqxgrid').jqxGrid('getcellvalue', row, 'tid');
+                $("#tid").val(tid);
+
+                var offset = $("#jqxgrid").offset();
+                $("#window_target").jqxWindow({ position: { x: parseInt(offset.right) + 60, y: parseInt(offset.top) + 20} });
+                 loadPageTarget('/gettargetcrfinfo' + '?tid=' + tid,1)
+                $('#window_target').jqxWindow('open');
+            }
+            if (category == "Mutation")
+            {
+               
+                $("#window_compound").jqxWindow('close');
+                $("#window_target").jqxWindow('close');
+                 mutant = $('#jqxgrid').jqxGrid('getcellvalue', row, 'mutation_info');
+                $("#mutant").val(tid);
+
+                var offset = $("#jqxgrid").offset();
+                $("#window_mutant").jqxWindow({ position: { x: parseInt(offset.right) + 60, y: parseInt(offset.top) + 20} });
+                 loadPageMutant('/getmutantinfo' + '?mutant=' + mutant)
+                $('#window_mutant').jqxWindow('open');
+            }
+
+        }
+        var linkrenderer = function (row, column, value) {
+            var href = ''
+            if (column == 'id'){
+                href = $('#c_content1').jqxGrid('getcellvalue', row, 'url');
+            }
+            if (column == 'id_value'){
+                href = $('#t_content1').jqxGrid('getcellvalue', row, 'url');
+            }
+            if (column == 'study_id'){
+                href = "https://clinicaltrials.gov/search?id=" + value;
+            }
+            if (column == 'pubmed_id'){
+                href = "http://www.ncbi.nlm.nih.gov/pubmed/?term=" + value;
+            }
+            if (column == 'pubmed_ids'){
+                 var links= ''
+                 ids = value.split(',')
+                 for(id in ids){
+                    href = "http://www.ncbi.nlm.nih.gov/pubmed/?term=" + ids[id];
+                    links = links + '<a target= "_blank" href="' + href + '"> ' + ids[id] + ' </a>'
+                 }
+                 return '<div style="margin: 5px;">'+links+'</div>'; 
+            }
+            if (column == 'reference'){
+                if (value.split(':')[0] == 'PMID'){
+                  href = "http://www.ncbi.nlm.nih.gov/pubmed/?term=" + value.split(':')[1];
+                  return '<div style="margin: 5px;"><a target= "_blank" href="' + href + '">' + value.split(':')[0] + '</a></div>';
+              }else{
+                return '<div style="margin: 5px;">'+value+'</div>';
+              }
+            }
+
+            return '<div style="margin: 5px;"><a target= "_blank" href="' + href + '">' + value + '</a></div>';
+            
+        } 
+            
+        var imagerenderer = function (row, column, value) {
+              
+                 
+                    return '<div style="margin:5px">'+value+' <a  href="#" onclick=openPopup("'+row+'")><span class="glyphicon glyphicon-info-sign"></span></a></div>';
+                 
+
+            
+            
+        }
+       var loadPageTarget = function (url,tabIndex) {
+
+        if (tabIndex == 2){
+            
+            cols = [
+                    { text: 'Gene name', datafield: 'gene_name' ,width:100},
+                    { text: 'Disease id', datafield: 'disease_id',width:90},
+                    { text: 'Disease name', datafield: 'disease_name',width:90},
+                    { text: 'Score', datafield: 'score',width:100},
+                    { text: 'No of snps', datafield: 'no_of_snps',width:90},
+                    { text: 'Description', datafield: 'description',width:150},
+                    { text: 'Source', datafield: 'source',width:60},
+                    { text: 'pubmed_id', datafield: 'pubmed_id',width:100,cellsrenderer:linkrenderer},
+                    { text: 'dtc_tid', datafield: 'dtc_tid',hidden:true}
+                ]
+
+        }
+        else{
+         
+            cols = [
+                { text: 'Database Name', datafield: 'database_name',width:150 },
+                { text: 'Id', datafield: 'id_value',cellsrenderer:linkrenderer},
+                { text: 'Url', datafield: 'url',hidden: true},
+            ]
+
+        }
+
+        var source =
+        {
+            async: false,
+            record: 'Table',
+            url: url, 
+            datatype: "json"
+        }; 
+            var dataAdapter = new $.jqx.dataAdapter(source,
+                {
+                    contentType: 'application/json; charset=utf-8',
+                    loadServerData: function (serverdata, source, callback) {
+                        $.ajax({
+                            type: "GET",
+                            contentType: "application/json; charset=utf-8",
+                            url: source.url,
+                            dataType: "json",
+                            success: function (data) {
+                               
+                                callback({ records: data });
+                            },
+                            error: function (xhr, ajaxOptions, thrownError) {
+                                // console.log(xhr.responseText);
+                            }
+                       
+                        });    
+                    }
+                }
+
+            );
+            $("#t_content"+tabIndex).jqxGrid(
+            {
+                  width: '100%',
+                  height:'100%',
+                  columnsresize: true,
+                  source: dataAdapter,
+                  columns: cols,
+                  selectionmode: 'multiplecells'
+              });
+                //  var firstHeader = $("#content"+tabIndex + " .jqx-grid-column-header:eq(0)");
+                // var firstHeaderText = $("#content"+tabIndex + " .jqx-grid-column-header:eq(0)")[0].innerText;
+                // firstHeader.jqxTooltip({ content: firstHeaderText, position: 'mouse', name: 'headerTooltip' });
+        }      
+        var loadPageCompound = function (url,tabIndex) {
+
+
+                if(tabIndex == 2){
+                    
+                cols = [
+                        { text: 'Study id', datafield: 'study_id' ,width:100,cellsrenderer:linkrenderer},
+                        { text: 'Drug', datafield: 'drug',width:90},
+                        { text: 'Phase', datafield: 'phase',width:90},
+                        { text: 'Mesh term', datafield: 'mesh_term',width:100},
+                        { text: 'Symptoms', datafield: 'symptoms',width:90},
+                        { text: 'Study title', datafield: 'study_title',width:150},
+                        { text: 'Enrollment', datafield: 'enrollment',width:60},
+                        { text: 'Study type', datafield: 'study_type',width:100},
+                        { text: 'Adverse effects', datafield: 'adverse_effects',width:100},
+                        { text: 'Status', datafield: 'status',width:100},
+                        { text: 'Min age', datafield: 'min_age',width:80},
+                        { text: 'Max age', datafield: 'max_age',width:80},
+                        { text: 'Gender', datafield: 'gender',width:80},
+                        { text: 'Pubmed ids', datafield: 'pubmed_ids',cellsrenderer:linkrenderer},
+                    ]
+                }else{
+                    
+                    cols = [
+                        { text: 'Database Name', datafield: 'database_name',width:150 },
+                        { text: 'Id', datafield: 'id',cellsrenderer:linkrenderer},
+                        { text: 'Url', datafield: 'url',hidden: true},
+                    ]
+
+                }
+
+           
+            
+            
+            
+            var source =
+                    {
+                        async: false,
+                        record: 'Table',
+                        url: url, 
+                        datatype: "json"
+                    }; 
+                    var dataAdapter = new $.jqx.dataAdapter(source,
+                        {
+                            contentType: 'application/json; charset=utf-8',
+                            loadServerData: function (serverdata, source, callback) {
+                                $.ajax({
+                                    type: "GET",
+                                    contentType: "application/json; charset=utf-8",
+                                    url: source.url,
+                                    dataType: "json",
+                                    success: function (data) {
+                                       
+                                        callback({ records: data });
+                                    },
+                                    error: function (xhr, ajaxOptions, thrownError) {
+                                        // console.log(xhr.responseText);
+                                    }
+                               
+                                });    
+                            }
+                        }
+
+                    );
+
+                 $("#c_content"+tabIndex).jqxGrid(
+                    {
+                      width: '100%',
+                      height:'100%',
+                      columnsresize: true,
+                      source: dataAdapter,
+                      columns: cols,
+                      selectionmode: 'multiplecells'
+                  });
+
+            }
+            var loadPageMutant = function (url) {
+
+            cols = [
+                { text: 'Mutated target', datafield: 'mutated_target',width:100 },
+                { text: 'Drug effect', datafield: 'drug_effect',width:90},
+                { text: 'Drug name', datafield: 'drug_name',width:90},
+                { text: 'Evidence level', datafield: 'evidence_level',width:100},
+                { text: 'Gene name', datafield: 'gene_name',width:90},
+                { text: 'Gdna', datafield: 'gdna',width:100},
+                { text: 'Tumor type', datafield: 'tumor_type',width:60},
+                { text: 'Reference', datafield: 'reference',width:100,cellsrenderer:linkrenderer}
+            ]
+            var source =
+                    {
+                        async: false,
+                        record: 'Table',
+                        url: url, 
+                        datatype: "json"
+                    }; 
+                    var dataAdapter = new $.jqx.dataAdapter(source,
+                        {
+                            contentType: 'application/json; charset=utf-8',
+                            loadServerData: function (serverdata, source, callback) {
+                                $.ajax({
+                                    type: "GET",
+                                    contentType: "application/json; charset=utf-8",
+                                    url: source.url,
+                                    dataType: "json",
+                                    success: function (data) {
+                                       
+                                        callback({ records: data });
+                                    },
+                                    error: function (xhr, ajaxOptions, thrownError) {
+                                        // console.log(xhr.responseText);
+                                    }
+                               
+                                });    
+                            }
+                        }
+
+                    );
+ 
+                 $("#m_content").jqxGrid(
+                    {
+                      width: '100%',
+                      height:'100%',
+                      columnsresize: true,
+                      source: dataAdapter,
+                      columns: cols,
+                      selectionmode: 'multiplecells'
+                  });
+
+        }
+        function get(name) {
+            if (name = (new RegExp('[?&]' + encodeURIComponent(name) + '=([^&]*)')).exec(location.search))
+
+                return decodeURIComponent(name[1]).replace(/\+/g,' ');
+        }
+
+
+
+
+
+    
+    </script>
+
+
+
+
+{% endblock %}
+   
+
+
+  
+
+
+{% block content %}
+
+    <div class="container-fluid">
+
+        <div class="container-fluid">
+           <div class="row " style="margin-bottom:10px">
+                <div class="search col-xs-11 col-sm-11 col-md-11 col-lg-11  nopadding">
+                                <form type="get" action="{% url 'search' %}" style="margin: 0">
+                        <div class="input-group">
+                           
+                            <input type="text" id="txtSearchClient" name="txtSearchClient" class="autosuggest form-control ui-autocomplete-input"  placeholder="Search bioactivities using compound, target or publication:" autocomplete="off" role="textbox" aria-autocomplete="list" aria-haspopup="true">
+                             <span class="input-group-btn">
+                            <button  title="Click here search" class="btn btn-default" type="submit"><span class="glyphicon glyphicon-search"></span></button>
+                          </span>
+                        </div>
+            
+                         </form>
+ <!--                    <ul class="breadcrumb">
+                    <li>
+                    <a href="/">Home</a>
+                    <span class="divider"></span>
+                    </li>
+                    <li>
+                        {{request.GET.txtSearchClient}}
+                        
+                    </li>
+      
+                    </ul>  -->
+                </div>
+
+
+                
+                <div class="col-xs-1- col-sm-1 col-md-1 col-lg-1 nopadding">    
+                        <a  href="#" data-toggle="modal" data-placement="top" data-target="#model_Help_Search" title="Click here to see help on searching bioactivities"><span class="glyphicon glyphicon-question-sign glyphicon-large"></span></a>
+                       
+                 </div>
+
+            </div>
+        </div>
+
+        
+         <div id="jqxgrid"></div>
+            <div id="window_compound">
+
+                <div id="windowHeader">
+                    <span>
+                       <b>Detail</b>
+                    </span>
+                </div>
+                <div style="overflow: hidden;" id="windowContent">
+                    <input type="hidden" id="molregno" value="">
+       
+
+                     <input type="hidden" id="category" value="">
+                    <div id="c_tabs">
+                        <ul style="margin-left: 30px;">
+                            <li>Cross referencing</li>
+                            <li>Indication information</li>
+                        </ul>
+                        <div id ='c_content1'>
+                            
+                            
+                        </div>   
+                        <div id='c_content2'>
+                           
+                          
+                        </div>
+                        
+                    </div>
+                </div>
+
+               
+            </div>
+            <div id="window_target">
+
+                <div id="windowHeader">
+                    <span>
+                       <b>Detail</b>
+                    </span>
+                </div>
+                <div style="overflow: hidden;" id="windowContent">
+         
+                    <input type="hidden" id="tid" value="">
+                     <input type="hidden" id="category" value="">
+                    <div id="t_tabs">
+                        <ul style="margin-left: 30px;">
+                            <li>Cross referencing</li>
+                            <li>Disease association</li>
+                        </ul>
+                        <div id ='t_content1'>
+                            
+                            
+                        </div>   
+                        <div id='t_content2'>
+                           
+                          
+                        </div>
+                        
+                    </div>
+                </div>
+                
+               
+            </div>
+                        <div id="window_mutant">
+
+                <div id="windowHeader">
+                    <span>
+                       <b>Detail</b>
+                    </span>
+                </div>
+                <div style="overflow: hidden;" id="windowContent">
+                    <input type="hidden" id="mutant" value="">
+                     <input type="hidden" id="category" value="">
+                    <div id="m_tabs">
+                        <ul style="margin-left: 30px;">
+                            <li>Disease information</li>
+                    
+                        </ul>
+                        <div id ='m_content'>
+                            
+                            
+                        </div>   
+      
+                        
+                    </div>
+                </div>
+                
+               
+            </div>
+
+    </div>
+
+{% endblock %}

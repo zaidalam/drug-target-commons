@@ -1,0 +1,414 @@
+{% extends "admin/base_site.html" %}
+{% load i18n admin_urls static admin_list %}
+
+{% block extrastyle %}
+  {{ block.super }}
+  <!-- Include the CSS that styles the charts. -->
+	<link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+	<link rel="stylesheet" href="{% static 'css/bootstrap-theme.min.css' %}">
+	<link rel="stylesheet" href="{% static 'css/main.css' %}">
+  <link rel="stylesheet" href="/static/css/chartjs-visualizations.css">
+  <link rel="stylesheet" type="text/css" href="{% static 'admin/css/changelists.css' %}" />
+   <link href="/static/css/jqx.base.css" rel="stylesheet" type="text/css" />
+    <link href="/static/css/jqx.bootstrap.css" rel="stylesheet" type="text/css" />
+
+    <link href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.1/themes/base/jquery-ui.css" rel="stylesheet" type="text/css" />
+      <link href="{% static 'css/alertify.css' %}" rel="stylesheet" />
+
+
+    <style>
+        .green:not(.jqx-grid-cell-hover):not(.jqx-grid-cell-selected), .jqx-widget .green:not(.jqx-grid-cell-hover):not(.jqx-grid-cell-selected) {
+            color: black;
+            background-color: #b6ff00;
+        }
+
+        .yellow:not(.jqx-grid-cell-hover):not(.jqx-grid-cell-selected), .jqx-widget .yellow:not(.jqx-grid-cell-hover):not(.jqx-grid-cell-selected) {
+            color: black;
+            background-color: yellow;
+        }
+
+        .red:not(.jqx-grid-cell-hover):not(.jqx-grid-cell-selected), .jqx-widget .red:not(.jqx-grid-cell-hover):not(.jqx-grid-cell-selected) {
+            color: black;
+            background-color: #e83636;
+        }
+
+        .editedRow {
+            color: #b90f0f !important;
+            font-style: italic;
+        }
+
+        .editedCell {
+            background-color: #d6e9c6 !important;
+            font-style: italic;
+        }
+    </style>
+  {% if cl.formset %}
+    <link rel="stylesheet" type="text/css" href="{% static "admin/css/forms.css" %}" />
+  {% endif %}
+  {% if cl.formset or action_form %}
+    <script type="text/javascript" src="{% url 'admin:jsi18n' %}"></script>
+  {% endif %}
+  {{ media.css }}
+  {% if not actions_on_top and not actions_on_bottom %}
+    <style>
+      #changelist table thead th:first-child {width: inherit}
+    </style>
+  {% endif %}
+
+         <script src="{% static 'js/vendor/jquery-1.11.1.min.js' %} "></script>
+        <script src="{% static 'js/vendor/bootstrap.min.js' %}"></script>
+     <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.1/jquery-ui.min.js"></script>
+              <script type="text/javascript" src="{% static 'js/alertify.js' %}"></script>
+         <script  type="text/javascript" src="{% static 'js/validator.js' %}"></script>
+
+    <script src="/static/js/vendor/Jqxwidgets/jqxcore.js" type="text/javascript"></script>
+    <script src="{% static 'js/vendor/Jqxwidgets/jqxbuttons.js' %}" type="text/javascript"></script>
+    <script src="{% static 'js/vendor/Jqxwidgets/jqxdata.js' %}" type="text/javascript"></script>
+    <script src="{% static 'js/vendor/Jqxwidgets/jqxgrid.js' %}" type="text/javascript"></script>
+     <script src="{% static 'js/vendor/Jqxwidgets/jqxgrid.selection.js' %}" type="text/javascript"></script>
+    <script src="{% static 'js/vendor/Jqxwidgets/jqxmenu.js' %}" type="text/javascript"></script>
+    <script src="{% static 'js/vendor/Jqxwidgets/jqxscrollbar.js' %}" type="text/javascript"></script>
+
+
+    <script type="text/javascript" src="{% static 'js/vendor/Jqxwidgets/jqxscrollbar.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/vendor/Jqxwidgets/jqxlistbox.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/vendor/Jqxwidgets/jqxdropdownlist.js' %}"></script>
+
+
+    <script type="text/javascript" src="{% static 'js/vendor/Jqxwidgets/jqxgrid.pager.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/vendor/Jqxwidgets/jqxgrid.sort.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/vendor/Jqxwidgets/jqxgrid.filter.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/vendor/Jqxwidgets/jqxcheckbox.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/vendor/Jqxwidgets/jqxgrid.edit.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/vendor/Jqxwidgets/jqxgrid.columnsresize.js' %}"></script>
+
+    <script type="text/javascript" src="{% static 'js/vendor/Jqxwidgets/jqxpanel.js' %}"></script>
+    <script type="text/javascript">
+        var editedCells = new Array();
+        var editable = false;
+        var wildType = ["wild_type", "mutated", ""];
+        var assayType = ["functional", "binding", "phenotypic", ""];
+        var assayFormat = ["biochemical", "cell_based", "cell_free", "physiochemical", "tissue", "organism_based", ""];
+        var assaySubtype = ["binding_saturation", "binding_reversible", "binding_irreversible", "enzyme_activity", "process", "reporter_gene", "signalling", "uptake", "viability", ""];
+        var inhibitorType = ["competitive_inhibitor", "non_competitive_inhibitor", "allosteric_inhibitor", ""];
+        var detectionTech = ["fluoresecence", "luminescence", "spectrophotometry", "radiometry", "microscopy", "label_free_technology", "fluorescence_polarization", "TRF", "TR_FRET", "AlphaScreen", "qPCR", "termal_shift", ""];
+        var EMA = ["activation", "cytotoxocity", "growth_inhibition", "inhibition", "inverse_agonist", ""];
+
+        $(document).ready(function () {
+
+            $("#content > h1" ).remove();
+            selection = 'multiplecellsadvanced'
+            editable = false;
+            {% if user.is_authenticated and user.is_superuser%}
+              editable = true;
+              selection = 'checkbox'
+            {% endif %} 
+            var source =
+            {
+                async: false,
+                url: '/getallsubmissions/',
+                datatype: "json"
+            };
+
+            var dataAdapter = new $.jqx.dataAdapter(source,
+                 {
+                     contentType: 'application/json; charset=utf-8',
+                     loadServerData: function (serverdata, source, callback) {
+                         $.ajax({
+                             type: "POST",
+                             contentType: "application/json; charset=utf-8",
+                             url: source.url,
+                             //data:JSON.stringify({'inchikey': 'key' }),
+                             dataType: "json",
+                             success: function (data) {
+                              console.log(data)
+                                 callback({ records: data });
+                             }
+                         });
+                     }
+
+                 }
+             );
+
+
+           
+            var cellclass = function (row, datafield, value) {
+
+
+                if (datafield == 'status_id') {
+                    if (value == 'NEW') {
+                        return 'alert-success';
+                    }
+                    else if (value == 'DECLINED') {
+                        return 'alert-danger';
+                    }
+                    else return 'alert-info';
+                }
+
+                for (var i = 0; i < editedCells.length; i++) {
+                    if (editedCells[i].row == row && editedCells[i].column == datafield) {
+                        return "editedCell";
+                    }
+                }
+
+
+            }
+            var cellvaluechanging = function (row, datafield, columntype, oldvalue, newvalue) {
+                if (oldvalue != newvalue) {
+                    editedCells.push({ row: row, column: datafield });
+
+                }
+            };
+
+            $("#jqxgrid").jqxGrid(
+            {
+                width: '100%',
+                height: '600px',
+                source: dataAdapter,
+                filterable: true,
+                columnsresize: true,
+                autoshowfiltericon: false,
+                sortable: true,
+                altrows: true,
+                
+                theme: 'bootstrap',
+                editable: editable,
+                pageable: true,
+                enablebrowserselection: true,
+                selectionmode: selection,
+                pagesizeoptions: ['25', '50', '100'],
+                ready: function () {
+                    $("#jqxgrid").jqxGrid({ pagesize: 25 });
+
+                },
+
+                columns: [
+
+                   
+                      { text: 'Status', datafield: 'status', width: 80, cellclassname: cellclass, cellvaluechanging: cellvaluechanging },
+                      { text: "Curator's email", pinned: true, datafield: 'curator_email', width: 200 },
+                      { text: 'Compound ID', datafield: 'compound_id', width: 200, cellsrenderer: linkrenderer, cellclassname: cellclass, cellvaluechanging: cellvaluechanging },
+                      { text: 'Standard Inchikey', datafield: 'standard_inchi_key', width: 250, cellclassname: cellclass, cellvaluechanging: cellvaluechanging },
+                      { text: 'Compound Name', datafield: 'compound_name', width: 200 },
+                      { text: 'Target ID', datafield: 'target_id', width: 200, cellsrenderer: linkrenderer, cellclassname: cellclass, cellvaluechanging: cellvaluechanging },
+                      { text: 'Target Name', datafield: 'target_pref_name', width: 200 },
+                        {
+                            text: "Wild type or mutated", datafield: 'wildtype_or_mutant', width: 200, columntype: 'dropdownlist', cellclassname: cellclass, cellvaluechanging: cellvaluechanging,
+                            initeditor: function (row, cellvalue, editor) {
+                                editor.jqxDropDownList({ source: wildType });
+                            }
+                        },
+                   
+                      { text: "Mutation information", datafield: "mutation_info", width: 200, cellclassname: cellclass, cellvaluechanging: cellvaluechanging },
+                      { text: 'PubMed ID', datafield: 'pubmed_id', width: 200, cellsrenderer: linkrenderer, cellclassname: cellclass, cellvaluechanging: cellvaluechanging },
+                      { text: 'End Point Standard Type', datafield: 'ep_standard_type', width: 200, cellclassname: cellclass, cellvaluechanging: cellvaluechanging },
+                      { text: 'End Point Standard Relation', datafield: 'ep_standard_relation', width: 200, cellclassname: cellclass, cellvaluechanging: cellvaluechanging },
+                      { text: 'End Point Standard Value', datafield: 'ep_standard_value', width: 200, cellclassname: cellclass, cellvaluechanging: cellvaluechanging },
+                      { text: 'End Point Standard Units', datafield: 'ep_standard_units', width: 200, cellclassname: cellclass, cellvaluechanging: cellvaluechanging },
+                      {
+                          text: "Endpoint Mode of Action", datafield: 'endpoint_actionmode_id', width: 200, columntype: 'dropdownlist', cellclassname: cellclass, cellvaluechanging: cellvaluechanging,
+                          initeditor: function (row, cellvalue, editor) {
+                              editor.jqxDropDownList({ source: EMA });
+                          }
+                      },
+                      {
+                          text: "Assay Format", datafield: 'assay_format_id', width: 200, columntype: 'dropdownlist', cellclassname: cellclass, cellvaluechanging: cellvaluechanging,
+                          initeditor: function (row, cellvalue, editor) {
+                              editor.jqxDropDownList({ source: assayFormat });
+                          }
+                      },
+                      {
+                          text: "Assay Type", datafield: 'assay_type_id', width: 200, columntype: 'dropdownlist', cellclassname: cellclass, cellvaluechanging: cellvaluechanging,
+                          initeditor: function (row, cellvalue, editor) {
+                              editor.jqxDropDownList({ source: assayType});
+                          }
+                      },
+                      {
+                          text: "Assay Sub Type", datafield: 'assay_sub_type_id', width: 200, columntype: 'dropdownlist', cellclassname: cellclass, cellvaluechanging: cellvaluechanging,
+                          initeditor: function (row, cellvalue, editor) {
+                              editor.jqxDropDownList({ source: assaySubtype });
+                          }
+                      },
+                      {
+                          text: "Inhibitor Type", datafield: 'inhibitor_type_id', width: 200, columntype: 'dropdownlist', cellclassname: cellclass, cellvaluechanging: cellvaluechanging,
+                          initeditor: function (row, cellvalue, editor) {
+                              editor.jqxDropDownList({ source: inhibitorType });
+                          }
+                      },
+                      {
+                          text: "Detection Technology", datafield: 'detection_technology_id', width: 200, columntype: 'dropdownlist', cellclassname: cellclass, cellvaluechanging: cellvaluechanging,
+                          initeditor: function (row, cellvalue, editor) {
+                              editor.jqxDropDownList({ source: detectionTech });
+                          }
+                      },
+                    
+                      { text: 'Compound concentration value', datafield: 'compound_concentration_value', width: 200, cellclassname: cellclass, cellvaluechanging: cellvaluechanging },
+                      { text: 'Compound concentration value units', datafield: 'compound_concentration_value_unit', width: 200, cellclassname: cellclass, cellvaluechanging: cellvaluechanging },
+                      { text: "Substrate's type", datafield: "substrate_type", width: 200, cellclassname: cellclass, cellvaluechanging: cellvaluechanging },
+                      { text: "Substrate Type's Standard Relation", datafield: "substrate_relation", width: 200, cellclassname: cellclass, cellvaluechanging: cellvaluechanging },
+                      { text: "Substrate Type's Standard Value", datafield: "substrate_value", width: 200, cellclassname: cellclass, cellvaluechanging: cellvaluechanging },
+                      { text: "Substrate Type's Standard Units", datafield: "substrate_units", width: 200, cellclassname: cellclass, cellvaluechanging: cellvaluechanging },
+                      { text: "Assay cell Type", datafield: 'assay_cell_type', width: 200, cellclassname: cellclass, cellvaluechanging: cellvaluechanging },
+                      { text: "Assay Description", datafield: 'assay_description', width: 200, cellclassname: cellclass, cellvaluechanging: cellvaluechanging },
+                      { text: "Activity Comments", datafield: 'activity_comment', width: 200, cellclassname: cellclass, cellvaluechanging: cellvaluechanging },
+                      { text: "Title", datafield: "title", width: 200, cellclassname: cellclass, cellvaluechanging: cellvaluechanging },
+                      { text: "Journal", datafield: "journal", width: 200, cellclassname: cellclass, cellvaluechanging: cellvaluechanging },
+                      { text: "Year", datafield: 'year', width: 200, cellclassname: cellclass, cellvaluechanging: cellvaluechanging },
+                      { text: "Volume", datafield: 'volume', width: 200, cellclassname: cellclass, cellvaluechanging: cellvaluechanging },
+                      { text: "Issue", datafield: 'issue', width: 200, cellclassname: cellclass, cellvaluechanging: cellvaluechanging },
+                      { text: "Authors", datafield: 'authors', width: 200, cellclassname: cellclass, cellvaluechanging: cellvaluechanging },
+                      { text: "Annotation comments", datafield: 'annotation_comments', width: 200, cellclassname: cellclass, cellvaluechanging: cellvaluechanging },
+                      { text: "User", datafield: 'curator_name', width: 200, cellclassname: cellclass, cellvaluechanging: cellvaluechanging },
+                      { text: "Time", datafield: 'time_stamp', width: 200, cellclassname: cellclass, cellvaluechanging: cellvaluechanging },
+                      { text: "Assay ID", datafield: 'dtc_assay_id', width: 200, cellclassname: cellclass, cellvaluechanging: cellvaluechanging ,hidden:false},
+                      { text: "Local Target ID", datafield: 'dtc_tid', width: 200, cellclassname: cellclass, cellvaluechanging: cellvaluechanging ,hidden:false},
+                      { text: "Activity ID", datafield: 'dtc_activity_id', width: 200, cellclassname: cellclass, cellvaluechanging: cellvaluechanging ,hidden:false},
+                      { text: "Molregno", datafield: 'dtc_molregno', width: 200, cellclassname: cellclass, cellvaluechanging: cellvaluechanging ,hidden:false},
+                      { text: "Record ID", datafield: 'dtc_record_id', width: 200, cellclassname: cellclass, cellvaluechanging: cellvaluechanging,hidden:false },
+                      { text: "Document ID", datafield: 'dtc_doc_id', width: 200, cellclassname: cellclass, cellvaluechanging: cellvaluechanging,hidden:false }
+
+                    ]
+
+            });
+
+
+            $("#btnDecline").click(function () {
+                data = getSelection();
+                if (data.length > 0) {
+                    alertify.confirm(data.length + " Entries are selected,Are you sure?",
+                        function (e) {
+                            if (e) {
+                                confirm_review(data, 'declined')
+
+                            }
+                        });
+                } else {
+                    alertify.alert('Select entries by checking the checkbox');
+
+                }
+
+
+
+
+            });
+            $("#btnAccept").click(function () {
+                data = getSelection();
+                if (data.length > 0) {
+                    alertify.confirm(data.length + " Entries are selected,Are you sure?",
+                        function (e) {
+                            if (e) {
+                                confirm_review(data, 'accepted')
+
+
+                            }
+                        });
+
+                } else {
+                    alertify.alert('Select entries by checking the checkbox');
+                }
+
+
+            });
+            $("#btnSuspend").click(function () {
+                data = getSelection();
+                if (data.length > 0) {
+                    alertify.confirm(data.length + " Entries are selected,Are you sure?",
+                      function (e) {
+                          if (e) {
+                              confirm_review(data, 'pending')
+                          }
+                      });
+                } else {
+                    alertify.alert('Select entries by checking the checkbox');
+                }
+
+            });
+
+        });
+
+        function confirm_review(data,status) {
+            $.ajax({
+                type: "POST",
+                contentType: "application/json; charset=utf-8",
+                url: '/process_submissions/',
+                data: JSON.stringify({'status':status ,'json_table':data }),
+                dataType: "json",
+                success: function (data) {
+                    alertify.success('Done');
+                    $('#jqxgrid').jqxGrid('updatebounddata');
+                }
+            });
+        }
+
+        var linkrenderer = function (row, column, value) {
+            var href = '';
+            if (column == 'compound_id') {
+                href = "https://www.ebi.ac.uk/chembl/compound/inspect/" + value;
+            } else if (column == 'target_id') {
+                href = "http://www.uniprot.org/uniprot/?query=accession:" + value.replace(',', 'or accession:');
+
+            } else {
+                href = "http://www.ncbi.nlm.nih.gov/pubmed/?term=" + value;
+            }
+
+            return '<div style="margin: 5px;"><a target= "_blank" href="' + href + '">' + value + '</a></div>';
+        }
+
+        // get all selected records.
+        function getSelection() {
+            var rows = $("#jqxgrid").jqxGrid('selectedrowindexes');
+            var selectedRecords = new Array();
+            for (var m = 0; m < rows.length; m++) {
+                var row = $("#jqxgrid").jqxGrid('getrowdata', rows[m]);
+                selectedRecords[selectedRecords.length] = row;
+            }
+            return selectedRecords
+
+        }
+    </script>
+
+{% endblock %}
+
+{% block extrahead %}
+{{ block.super }}
+{{ media.js }}
+{% endblock %}
+
+{% block bodyclass %}{{ block.super }} app-{{ 'opts.app_label' }} model-{{ opts.model_name }} change-list{% endblock %}
+
+{% if not is_popup %}
+{% block breadcrumbs %}
+<div class="breadcrumbs">
+<a href="{% url 'admin:index' %}">{% trans 'Home' %}</a>
+&rsaquo; <a href="{% url 'admin:app_list' app_label=cl.opts.app_label %}">{{ cl.opts.app_config.verbose_name }}</a>
+&rsaquo; {{ cl.opts.verbose_name_plural|capfirst }}
+</div>
+{% endblock %}
+{% endif %}
+
+{% block coltype %}flex{% endblock %}
+
+{% block content %}
+ <div class="container-fluid">
+        <h3>DTC submitted data:</h3>
+        <div id="jqxgrid"></div>
+
+ {% if user.is_authenticated and user.is_superuser%}
+        
+        <div id="eventslog" style="width: 100%; margin-top: 10px">
+            <button type="button" id="btnAccept" class="btn btn-default action">
+                <span class="glyphicon glyphicon-ok"></span>Accept 
+            </button>
+            <button type="button" id="btnDecline" class="btn btn-danger action">
+                <span class="glyphicon glyphicon-remove"></span>Decline 
+            </button>
+            <button type="button" id="btnSuspend" class="btn btn-default action">
+                <span class="glyphicon glyphicon-time"></span>Suspend 
+            </button>
+
+        </div>
+
+  {% endif %}        
+        
+    </div>
+{% endblock %}

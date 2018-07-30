@@ -1,0 +1,551 @@
+{% extends "base.html" %}
+{% block head_title %}User Guide{% endblock %}
+{% block head_css %}
+
+  <style>
+
+
+    .wrap-outer {
+        margin-top:-40px;;
+    }
+    .wrap-inner {
+        padding-top:40px;;
+    }
+    body { position: relative}
+    .nav .active {
+        font-weight: bold;
+        background: #eeeeee;
+    }
+    .nav .nav {
+    display: none;
+    }
+
+    .nav .active .nav {
+    display: block;
+    }
+
+    .nav .nav a {
+    font-weight: normal;
+    font-size: .85em;
+    }
+
+    .nav .nav span {
+    margin: 0 5px 0 2px;
+    }
+
+    .nav .nav .active a,
+    .nav .nav .active:hover a,
+    .nav .nav .active:focus a {
+    font-weight: bold;
+    padding-left: 30px;
+    border-left: 5px solid #0a9ac1;
+    }
+
+    .nav .nav .active span,
+    .nav .nav .active:hover span,
+    .nav .nav .active:focus span {
+    display: none;
+    }
+
+    #help .well {
+        font-family: Courier;
+        font-size: 1.2em;
+    }
+
+ 
+
+  .affix {
+      top: 20px;
+  }
+  div.col-sm-9 div {
+      height: 250px;
+      font-size: 28px;
+  }
+    .thumbCaption{
+
+    font-size: 12px;
+    }
+    .text-center{
+        
+        font-style: italic;
+    }
+
+  p {
+
+    text-align: justify;
+  }
+
+
+  </style>
+  <link href="//cdn.rawgit.com/noelboss/featherlight/1.7.0/release/featherlight.min.css" type="text/css" rel="stylesheet" />
+
+{% endblock %}
+{% block head_javascript %}
+     <script>
+       $(document).ready(function() {
+            $('body').scrollspy({target: "#myScrollspy", offset: 250})
+       });
+   // </script>
+{% endblock %}
+
+{% block content %}
+
+<div class="row">
+  <div id="myScrollspy" class="col-sm-3">
+    <ul class="nav hidden-xs hidden-sm affix" data-spy="affix" data-offset-top="200">
+      <li>
+        <a href="#intro">
+          Introduction
+        </a>
+      </li>
+      <li>
+        <a href="#ui">
+          User Information
+        </a>
+      </li>
+      <li>
+        <a href="#search">
+          Search
+        </a>
+        <ul class="nav">
+          <li>
+            <a href="#compound">
+              Compound search
+            </a>
+          </li>
+          <li>
+            <a href="#target">
+              Target search
+            </a>
+          </li>
+          <li>
+            <a href="#publication">
+              Publication search
+            </a>
+          </li>
+          <li>
+            <a href="#filter">
+              Filter
+            </a>
+          </li>
+        </ul>
+      </li>
+      <li>
+        <a href="#annotations">
+          Annotations
+        </a>
+        <ul class="nav">
+          <li>
+            <a href="#add_annotations">
+              Add annotations
+            </a>
+          </li>
+        </ul>
+      </li>
+      <li>
+        <a href="#submission">
+          Submissions
+        </a>
+      </li>
+      <li>
+        <a href="#feedback">
+          Feedback
+        </a>
+      </li>
+    </ul>
+  </div>
+  <div class="col-md-9">
+    <div class="wrap-outer">
+      <section id="intro">
+        <div class="wrap-inner">
+          <h1 style="margin-top: 0;">
+            Introduction
+          </h1>
+          <p>
+            Drug Target Commons (DTC) is a community based effort to improve the consensus on drug-target interactions. Our system contains two types of bioactivity data i.e. annotated and annotated. Initial search on 'Home page' allows the users to view existing (unannotated) bioactivity data using compound, target or publications. However, users may submit suggestions to edit/add bioactivity data and MicroBAO annotations.
+          </p>
+        </div>
+      </section>
+    </div>
+    <div class="wrap-outer">
+      <section id="ui">
+        <div class="wrap-inner">
+          <h1>
+            User Information/login
+          </h1>
+          <div class="row">
+            <div class="col-xs-6 col-md-6">
+              <p>
+                DTC data has open access but user information(name and email)/login is required if the user is submitting annotations .This is to avoid spam.To login, user can use google account/Fimm user verification .
+              </p>
+            </div>
+            <div class="col-xs-6 col-md-6">
+              <p class="thumbCaption text-center">
+                Click to enlarge
+              </p>
+              <a class="thumbnail" href="#" data-featherlight="/static/img/help/ui.png">
+                <img src="/static/img/help/ui.png" alt="ui" />
+              </a>
+              <p class="thumbCaption">
+                <strong>
+                  Figure 1:
+                </strong>
+                 User Information.(1) name and email required for submisions.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+    <div class="wrap-outer">
+      <section id="search">
+        <div class="wrap-inner">
+          <h1>
+            Search
+          </h1>
+          <div class="row">
+            <div class="col-xs-6 col-md-6">
+              <p>
+                Search keyword are matched with annotated/unannotated compounds, targets and publications, therefor you get a combined set of results from which you select the preferred result.
+              </p>
+            </div>
+            <div class="col-xs-6 col-md-6">
+              <p class="thumbCaption text-center">
+                Click to enlarge
+              </p>
+              <a class="thumbnail" href="#" data-featherlight="/static/img/help/search.png">
+                <img src="/static/img/help/search.png" alt="upload data-1" />
+              </a>
+              <p class="thumbCaption">
+                <strong>
+                  Figure 2:
+                </strong>
+                 Search Example: (1) Search bar,add text to search (2) Search Results table, list compounds,targets and mutations matching the search. (3) Bioactivities, list of bioactivites for the selected target,compound or mutation.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+    <div class="wrap-outer">
+      <section id="compound">
+        <div class="wrap-inner">
+          <h1>
+            Compound search
+          </h1>
+          <p>
+            <strong>
+              Compound search
+            </strong>
+             can be by name or synonyms, standard inchikey or any of 26 IDs (Chembl, bindingdb, molport, surechembl, actor, nmrshiftdb2, chebi, hmdb, fdasrs, selleck, lincs, drugbank, nih_ncc, pharmgkb, ibm, nikkaji, pubchem, emolecules, zinc, recon, mcule, pubchem_dotf, gtopdb, pdb, pubchem_tpharma, kegg_ligand). Partial and exact searches are supportable for compound name or synonyms; while inchikey or IDs must have exact match. After entering compound name or ID, user must have to click on search button (or press enter key) to search it in present database.
+          </p>
+        </div>
+      </section>
+    </div>
+    <div class="wrap-outer">
+      <section id="target">
+        <div class="wrap-inner">
+          <h1>
+            Target search
+          </h1>
+          <p>
+            <strong>
+              Target search
+            </strong>
+             can be made by target name, gene name and ID (UniProtKB-AC, UniProtKB-ID, EMBL-CDS, Ensembl, PIR, PubMed, NCBI-taxon, Ensembl_TRS, MIM, UniGene, UniRef50, RefSeq, GO, PDB, UniParc, Additional PubMed, EMBL, GI, GeneID, Chembl, UniRef100, UniRef90, Ensembl_PRO) . Rest of specifications are more or less similar to compound search. Again same filter on target types. User may perform filtering, searcing, reordering of columns and export to excell to the resulting records.
+          </p>
+        </div>
+      </section>
+    </div>
+    <div class="wrap-outer">
+      <section id="publication">
+        <div class="wrap-inner">
+          <h1>
+            Publication search
+          </h1>
+          <p>
+            Publication search can be done using "Pubmed ID". If "pubmed ID" information doesn&rsquo;t exists in our present database user may manually enter all the fields. If &lsquo;pubmed ID&rsquo; information exists in our system, than some of the information about compound, targets, bioactivities, assays and publication will be retrieved automatically. However MicroBAO and few more fields will be left blank for user. Again, User may filter out irrelevant compounds or targets.
+          </p>
+        </div>
+      </section>
+    </div>
+    <div class="wrap-outer">
+      <section id="filter">
+        <div class="wrap-inner">
+          <h1>
+            Filter
+          </h1>
+          <div class="row">
+            <div class="col-xs-6 col-md-6">
+              <p>
+                Following filters are avaialble
+              </p>
+              <ul>
+                <li>
+                  <p>
+                    Sort Acending/Decending
+                  </p>
+                </li>
+                <li>
+                  <p>
+                    contains/does not contain'
+                  </p>
+                </li>
+                <li>
+                  <p>
+                    empty/no empty'
+                  </p>
+                </li>
+                <li>
+                  <p>
+                    null/notnull'
+                  </p>
+                </li>
+                <li>
+                  <p>
+                    starts/ends/equal wtih'
+                  </p>
+                </li>
+              </ul>
+            </div>
+            <div class="col-xs-6 col-md-6">
+              <p class="thumbCaption text-center">
+                Click to enlarge
+              </p>
+              <a class="thumbnail" href="#" data-featherlight="/static/img/help/filter.png">
+                <img src="/static/img/help/filter.png" alt="filter" />
+              </a>
+              <p class="thumbCaption">
+                <strong>
+                  Figure 3:
+                </strong>
+                 (1) Filter icon.(2) Sort options. (3) Other filter options.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+    <div class="wrap-outer">
+      <section id="annotations">
+        <div class="wrap-inner">
+          <h1>
+            Annotations
+          </h1>
+          <div class="row">
+            <div class="col-xs-6 col-md-6">
+              <p>
+                Bioactivites are either annotated(
+                <em>
+                  highlight in blue
+                </em>
+                ) or unannotated and only unannotated bioactivites can be edited.
+              </p>
+            </div>
+            <div class="col-xs-6 col-md-6">
+              <p class="thumbCaption text-center">
+                Click to enlarge
+              </p>
+              <a class="thumbnail" href="#" data-featherlight="/static/img/help/bioactivites.png">
+                <img src="/static/img/help/bioactivites.png" alt="bioactivities" />
+              </a>
+              <p class="thumbCaption">
+                <strong>
+                  Figure 4:
+                </strong>
+                 Bioactivities.(1) Annotated (2) Unannotated.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+    <div class="wrap-outer">
+      <section id="add_annotations">
+        <div class="wrap-inner">
+          <h1>
+            Add annotations
+          </h1>
+          <div class="row">
+            <div class="col-xs-6 col-md-6">
+              <p>
+                Annotations can be added by uploading a excel file(suitable for large data) or directly from search results
+              </p>
+              <ul>
+                <li>
+                  <p>
+                    Click on the
+                    <em>
+                      &ldquo;Download Template&rdquo;
+                    </em>
+                     clink and down the excel file template.
+                  </p>
+                </li>
+                <li>
+                  <p>
+                    Fill the columns with required annotated data
+                  </p>
+                </li>
+                <li>
+                  <p>
+                    Click '
+                    <em>
+                      Send for Review
+                    </em>
+                    '
+                  </p>
+                </li>
+              </ul>
+            </div>
+            <div class="col-xs-6 col-md-6">
+              <p class="thumbCaption text-center">
+                Click to enlarge
+              </p>
+              <a class="thumbnail" href="#" data-featherlight="/static/img/help/bulkimport.png">
+                <img src="/static/img/help/bulkimport.png" alt="bulk Import" />
+              </a>
+              <p class="thumbCaption">
+                <strong>
+                  Figure 5:
+                </strong>
+                 (A)Bulk import .(1) Download example template (2) Upload new Annoataions.
+              </p>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-xs-6 col-md-6">
+              <p>
+                Uploaded Annotations can be previewed and edited before submitting
+              </p>
+            </div>
+            <div class="col-xs-6 col-md-6">
+              <p class="thumbCaption text-center">
+                Click to enlarge
+              </p>
+              <a class="thumbnail" href="#" data-featherlight="/static/img/help/preview.png">
+                <img src="/static/img/help/preview.png" alt="Preview" />
+              </a>
+              <p class="thumbCaption">
+                <strong>
+                  Figure 6:
+                </strong>
+                 Bulk import .(1) Edited fields are coloured green (2) Filter options
+              </p>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-xs-6 col-md-6">
+              <p>
+                Add Annotations directly from search results
+              </p>
+            </div>
+            <div class="col-xs-6 col-md-6">
+              <p class="thumbCaption text-center">
+                Click to enlarge
+              </p>
+              <a class="thumbnail" href="#" data-featherlight="/static/img/help/edit-1.png">
+                <img src="/static/img/help/edit-1.png" alt="Preview" />
+              </a>
+              <p class="thumbCaption">
+                <strong>
+                  Figure 7:
+                </strong>
+                 Add Annotations .(1) You can export the data into and excel sheet and edit it (2) Disabled because no annotations has been edited.
+              </p>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-xs-6 col-md-6">
+              <p>
+                edited fields will turn green after edit
+              </p>
+            </div>
+            <div class="col-xs-6 col-md-6">
+              <p class="thumbCaption text-center">
+                Click to enlarge
+              </p>
+              <a class="thumbnail" href="#" data-featherlight="/static/img/help/edit-2.png">
+                <img src="/static/img/help/edit-2.png" alt="Preview" />
+              </a>
+              <p class="thumbCaption">
+                <strong>
+                  Figure 8:
+                </strong>
+                 Add Annotations .(1) Edited fields are colored green. (2) Disabled because no annotations has been edited.(2) Once all changes are complete click &rdquo;
+                <em>
+                  Send for Review&rdquo;, you will be asked user credentials if you are not logged in
+                </em>
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+    <div class="wrap-outer">
+      <section id="submissions">
+        <div class="wrap-inner">
+          <h1>
+            Submission
+          </h1>
+          <div class="row">
+            <div class="col-xs-6 col-md-6">
+              <p>
+                All submitted annotations can be viewed in the submission page, which will be reviewed and approved or disapproved by the Admin.
+              </p>
+            </div>
+            <div class="col-xs-6 col-md-6">
+              <p class="thumbCaption text-center">
+                Click to enlarge
+              </p>
+              <a class="thumbnail" href="#" data-featherlight="/static/img/help/submissions.png">
+                <img src="/static/img/help/submissions.png" alt="submissions" />
+              </a>
+              <p class="thumbCaption">
+                &nbsp;
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+    <div class="wrap-outer">
+      <section id="feedback">
+        <div class="wrap-inner">
+          <h1>
+            Feedback
+          </h1>
+          <div class="row">
+            <div class="col-xs-6 col-md-6">
+              <p>
+                a)Feedback form: Feedback button is available on the right side of all pages. Click to submit your suggestions or issues while using DTC.
+              </p>
+            </div>
+            <div class="col-xs-6 col-md-6">
+              <p class="thumbCaption text-center">
+                Click to enlarge
+              </p>
+              <a class="thumbnail" href="#" data-featherlight="/static/img/help/feedback.png">
+                <img src="/static/img/help/feedback.png" alt="Feedback" />
+              </a>
+              <p class="thumbCaption">
+                &nbsp;
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+<!--
+    <p style="margin-bottom: 1500px">
+    </p>
+     -->
+  </div>
+</div>
+
+  <script src="//cdn.rawgit.com/noelboss/featherlight/1.7.0/release/featherlight.min.js" type="text/javascript" charset="utf-8"></script>
+
+{% endblock %}
+
+
+
+

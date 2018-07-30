@@ -1,0 +1,49 @@
+﻿.spinner {
+  display: inline-block;
+  opacity: 0;
+  width: 0;
+
+  -webkit-transition: opacity 0.25s, width 0.25s;
+  -moz-transition: opacity 0.25s, width 0.25s;
+  -o-transition: opacity 0.25s, width 0.25s;
+  transition: opacity 0.25s, width 0.25s;
+}
+
+.has-spinner.active {
+  cursor:progress;
+}
+
+.has-spinner.active .spinner {
+  opacity: 1;
+  width: auto; 
+}
+
+
+
+
+
+.has-spinner.btn.active .spinner {
+    width: 16px;
+}
+
+
+
+
+        #drop{
+            border:2px dashed #bbb;
+            -moz-border-radius:5px;
+            -webkit-border-radius:5px;
+            border-radius:5px;
+            padding-top:9em;
+            height:20em;
+            text-align:center;
+            font:20pt bold,"Vollkorn";color:#bbb
+        }
+   
+
+         .wrongCellvalue
+            {
+                background-color: #ebccd1 !important;
+                color: White;
+                font-style: italic;
+            }    

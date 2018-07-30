@@ -1,0 +1,281 @@
+
+{% extends "base.html" %}
+{% load staticfiles %}
+{% block head_title %}Annotations{% endblock %}
+ 
+{% block head_css %}
+
+ <link href="{% static 'css/jqx.base.css' %}" rel="stylesheet" type="text/css" />
+    <link href="{% static 'css/jqx.bootstrap.css' %}" rel="stylesheet" type="text/css" />
+
+    <link href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.1/themes/base/jquery-ui.css" rel="stylesheet" type="text/css" />
+
+
+
+    <style>
+     .spinner {
+            display: inline-block;
+            opacity: 0;
+            width: 0;
+            -webkit-transition: opacity 0.25s, width 0.25s;
+            -moz-transition: opacity 0.25s, width 0.25s;
+            -o-transition: opacity 0.25s, width 0.25s;
+            transition: opacity 0.25s, width 0.25s;
+        }
+
+        .has-spinner.active {
+            cursor: progress;
+        }
+
+            .has-spinner.active .spinner {
+                opacity: 1;
+                width: auto; /* This doesn't work, just fix for unkown width elements */
+            }
+
+
+
+
+
+        .has-spinner.btn.active .spinner {
+            width: 16px;
+        }
+
+        .nopadding {
+            padding: 0 !important;
+            margin: 0 !important;
+        }
+
+        .glyphicon-large {
+            min-height: 40px;
+            line-height: 40px;
+            width: 1em;
+            display: block;
+            margin: -0.5em 0 0px;
+        }
+        /*.editedRow {
+                color: #b90f0f !important;
+                font-style: italic;
+            }
+        .editedCell
+            {
+                background-color: #d6e9c6 !important;
+               
+                font-style: italic;
+            }*/
+    </style>
+
+{% endblock %}
+
+
+
+{% block head_javascript %}
+
+
+
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.1/jquery-ui.min.js"></script>
+
+    <script src="{% static 'js/vendor/Jqxwidgets/jqxcore.js' %}" type="text/javascript"></script>
+    <script src="{% static 'js/vendor/Jqxwidgets/jqxbuttons.js' %}" type="text/javascript"></script>
+    <script src="{% static 'js/vendor/Jqxwidgets/jqxdata.js' %}" type="text/javascript"></script>
+    <script src="{% static 'js/vendor/Jqxwidgets/jqxgrid.js' %}" type="text/javascript"></script>
+    <script src="{% static 'js/vendor/Jqxwidgets/jqxgrid.selection.js' %}" type="text/javascript"></script>
+    <script src="{% static 'js/vendor/Jqxwidgets/jqxmenu.js' %}" type="text/javascript"></script>
+    <script src="{% static 'js/vendor/Jqxwidgets/jqxscrollbar.js' %}" type="text/javascript"></script>
+
+
+    <script type="text/javascript" src="{% static 'js/vendor/Jqxwidgets/jqxscrollbar.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/vendor/Jqxwidgets/jqxlistbox.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/vendor/Jqxwidgets/jqxdropdownlist.js' %}"></script>
+
+
+    <script type="text/javascript" src="{% static 'js/vendor/Jqxwidgets/jqxgrid.pager.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/vendor/Jqxwidgets/jqxgrid.sort.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/vendor/Jqxwidgets/jqxgrid.filter.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/vendor/Jqxwidgets/jqxcheckbox.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/vendor/Jqxwidgets/jqxgrid.edit.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/vendor/Jqxwidgets/jqxgrid.columnsresize.js' %}"></script>
+
+    <script type="text/javascript" src="{% static 'js/vendor/Jqxwidgets/jqxpanel.js' %}"></script>
+
+<!--     // <script type="text/javascript" src="{% static 'js/annotations.js' %}"></script> -->
+
+    <script type="text/javascript">
+    $(document).ready(function () {
+            //Getting the source data with ajax GET request
+
+            // $('#title').html('DTC annotated data for Standard Inchikey:<strong>' + get('key')+'</strong>');
+            var source =
+            {
+                async: false,
+                url: 'get_annotations',
+                datatype: "json"
+            };
+
+            var dataAdapter = new $.jqx.dataAdapter(source,
+                {
+
+                    contentType: 'application/json; charset=utf-8',
+                    loadServerData: function (serverdata, source, callback) {
+                        $.ajax({
+                            type: "POST",
+                            contentType: "application/json; charset=utf-8",
+                            url: source.url,
+                            data:JSON.stringify({'id': get('key') }),
+                            dataType: "json",
+                            success: function (data) { 
+                                                          
+                                callback({ records: data });
+                            }
+
+                        });
+                    }
+                }
+            );
+            $("#jqxgrid").jqxGrid(
+                                  {
+                                      width: '100%',
+                                      height:'600px',
+                                      source: dataAdapter,
+                                      filterable: true,
+                                      columnsresize: true,
+                                      autoshowfiltericon: false,
+                                      sortable: true,
+                                      pageable: true,
+                                      enablebrowserselection:true,
+                                      theme: 'bootstrap',
+                                      altrows: true,
+                                      pagesizeoptions: ['25', '50', '100'],
+                                      ready: function () {
+                                          $("#jqxgrid").jqxGrid({ pagesize: 25 });
+                                      },
+
+                                      columns: [
+                         
+
+                                  { text: 'Compound ID', datafield: 'compound_id', width: 200, cellsrenderer: linkrenderer },
+                                            { text: 'Standard Inchikey', datafield: 'standard_inchi_key', width: 250 },
+                                            { text: 'Compound Name', datafield: 'compound_name', width: 200 },
+                                  { text: 'Target ID', datafield: 'target_id', width: 200, cellsrenderer: linkrenderer },
+                                  { text: 'Target Name', datafield: 'target_pref_name', width: 200 },
+                                  { text: "Gene Name", datafield: "gene_names", width: 200 },                                         
+                                  { text: "Wild type or mutant", datafield: "wildtype_or_mutant", width: 200 },
+                                            { text: "Mutation information", datafield: "mut_info", width: 200 },
+                                            { text: 'PubMed ID', datafield: 'pubmed_id', width: 200, cellsrenderer: linkrenderer },
+                                           // { text: 'PubMed ID', datafield: 'pubmed_id', width: 200 },
+                                            { text: 'End Point Standard Type', datafield: 'ep_standard_type', width: 200 },
+                                            { text: 'End Point Standard Relation', datafield: 'ep_standard_relation', width: 200 },
+                                            { text: 'End Point Standard Value', datafield: 'ep_standard_value', width: 200 },
+                                            { text: 'End Point Standard Units', datafield: 'ep_standard_units', width: 200 },
+                                            { text: 'Endpoint Mode of Action', datafield: 'endpoint_actionmode_id', width: 200 },
+                                  { text: 'Assay Format', datafield: 'assay_format_id', width: 200 },
+                                  { text: 'Assay Type', datafield: 'assay_type_id', width: 200 },
+                                  { text: 'Assay Sub Type', datafield: 'assay_sub_type_id', width: 200 },
+                                            { text: 'Inhibitor Type', datafield: 'inhibitor_type_id', width: 200 },
+                                            { text: 'Detection Technology', datafield: 'detection_technology_id', width: 200 },
+                                            { text: 'Compound concentration value', datafield: 'compound_single_conc_value', width: 200 },
+                                            { text: 'Compound concentration value units', datafield: 'cscv_stand_unit', width: 200 },
+                                             { text: "Substrate's type", datafield: "substrate_type", width: 200 },
+                                            { text: "Substrate Type's Standard Relation", datafield: "substrate_relation", width: 200 },
+                                            { text: "Substrate Type's Standard Value", datafield: "substrate_value", width: 200 },
+                                            { text: "Substrate Type's Standard Units", datafield: "substrate_units", width: 200 },
+                                  { text: "Assay cell line", datafield: 'assay_cell_line', width: 200 },
+                                  { text: "Assay Description", datafield: 'assay_description', width: 200 },
+                                  { text: "Activity Comments", datafield: 'activity_comment', width: 200 },
+                                            { text: "Title", datafield: "title", width: 200 },
+                                            { text: "Journal", datafield: "journal", width: 200 },
+                                            { text: "Year", datafield: '_year', width: 200 },
+                                            { text: "Volume", datafield: 'volume', width: 200 },
+                                            { text: "Issue", datafield: 'issue', width: 200 },
+                                            { text: "Authors", datafield: 'authors', width: 200 },
+                                  { text: "Annotation comments", datafield: 'ann_comments', width: 200 },
+                                  { text: "Curator's email", datafield: 'email', width: 200 },
+                                  { text: "User", datafield: 'user', width: 200 },
+                                  { text: "Time", datafield: 'time', width: 200 }
+                                ]
+                                  });
+
+           
+          // $("#excelExport").click(function () {
+
+          //     var count = $("#jqxgrid").jqxGrid('getdatainformation').rowscount;
+          //     if (count > 15000) {
+
+          //         alertify.error('Too many records,apply filtering to reduce records');
+
+          //     } else {
+
+          //         export_data();
+          //     }
+
+          // });
+
+        });
+      // function export_data() {
+
+
+      //     xhttp = new XMLHttpRequest();
+      //     xhttp.onreadystatechange = function() {
+      //         var a, today;
+      //         if (xhttp.readyState === 4 && xhttp.status === 200) {
+      //             a = document.createElement('a');
+      //             a.href = window.URL.createObjectURL(xhttp.response);
+      //             today = new Date();
+      //             a.download = "bioactivities_" + today.toDateString().split(" ").join("_") + ".xlsx";
+      //             a.style.display = 'none';
+      //             document.body.appendChild(a);
+      //             return a.click();
+      //         }
+      //     };
+      //     xhttp.open("POST", "/export_to_excell/", true);
+      //     xhttp.setRequestHeader("Content-Type", "application/json");
+      //     xhttp.responseType = 'blob';
+      //     xhttp.send(JSON.stringify({'json_table':$('#jqxgrid').jqxGrid('getrows')}));
+
+      // }
+        function get(name) {
+            if (name = (new RegExp('[?&]' + encodeURIComponent(name) + '=([^&]*)')).exec(location.search))
+                return decodeURIComponent(name[1]);
+        }
+     
+        var columnrenderer = function (value) {
+            return '<div style="text-align: center; margin-top: 5px;">' + value + '</div>';
+        }
+        var linkrenderer = function (row, column, value) {
+            var href = '';
+            if (column == 'compound_id') {
+                href = "https://www.ebi.ac.uk/chembl/compound/inspect/" + value;
+            } else if (column == 'target_id') {
+                href = "http://www.uniprot.org/uniprot/?query=accession:" + value.replace(',', 'or accession:');
+
+            } else {
+                href = "http://www.ncbi.nlm.nih.gov/pubmed/?term=" + value;
+            }
+
+            return '<div style="margin: 5px;"><a target= "_blank" href="' + href + '">' + value + '</a></div>';
+        }
+
+
+
+    </script>
+
+{% endblock %}
+   
+
+
+  
+
+
+{% block content %}
+<div class="container-fluid">
+<!-- <h4 id="title"></h4> -->
+<div id="jqxgrid"></div>
+        <div id="eventslog" style="width:100%;margin-top:10px">
+            <div style="width: 400px; float: left;margin-right: 10px;">
+                <input class="btn btn-default " value="Remove Filters" id="clearfilteringbutton" type="button" />
+                <!--  <input type="button" class="btn btn-default" value="Export to Excel" id='excelExport' /> -->
+            </div>
+            
+        </div>
+      </div>
+
+{% endblock %}
