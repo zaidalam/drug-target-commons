@@ -10,4 +10,4 @@ For any questions please contact **Zia Ur Rehman** [@Zia ur Rehman](zia.rehman@h
 
 Code copyright 2018 Drug Target Profiler
 
-Licence [https://github.com/zaidalam/drug-target-profiler/blob/master/LICENSE]
+Licence [https://github.com/zaidalam/drug-target-commons/blob/master/LICENSE]
