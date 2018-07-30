@@ -8,6 +8,6 @@ For any questions please contact **Zia Ur Rehman** [@Zia ur Rehman](zia.rehman@h
 
 ## Copyright and license
 
-Code copyright 2018 Drug Target Profiler
+Code copyright 2018 Drug Target Commons
 
 Licence [https://github.com/zaidalam/drug-target-commons/blob/master/LICENSE]
