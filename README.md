@@ -1,29 +1,13 @@
-# README #
+# Drug Target Commons
 
-This README would normally document whatever steps are necessary to get your application up and running.
+<p style="text-align:justify;"> <b>Drug Target Commons</b>(DTC) is a crowd-sourcing platform to improve the consensus and use of drug-target interactions. The end users can search, view and download bioactivity data using various compound, target and publications identifiers. Expert users may also submit suggestions to edit and upload new bioactivity data, as well as participate in the assay annotation and data curation processes..The public version of web application (https://drugtargetcommons.fimm.fi/) is developed using Django framework and its implementation is available <a href="https://github.com/zaidalam/drug-target-commons/archive/master.zip">here</a>.</p>
 
-### What is this repository for? ###
+##
 
-* Quick summary
-* Version
-* [Learn Markdown](https://bitbucket.org/tutorials/markdowndemo)
+For any questions please contact **Zia Ur Rehman** [@Zia ur Rehman](zia.rehman@helsinki.fi)
 
-### How do I get set up? ###
+## Copyright and license
 
-* Summary of set up
-* Configuration
-* Dependencies
-* Database configuration
-* How to run tests
-* Deployment instructions
+Code copyright 2018 Drug Target Profiler
 
-### Contribution guidelines ###
-
-* Writing tests
-* Code review
-* Other guidelines
-
-### Who do I talk to? ###
-
-* Repo owner or admin
-* Other community or team contact
+Licence [https://github.com/zaidalam/drug-target-profiler/blob/master/LICENSE]
